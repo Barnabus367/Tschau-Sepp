@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <g>
+    <!-- Eichel - gelber Stiel mit grüner Unterseite -->
+    <path d="M45,15 L55,15 L55,40 L50,45 L45,40 Z" fill="#FFE500" stroke="#000" stroke-width="1"/>
+    
+    <!-- Gelber Hauptteil -->
+    <path d="M40,40 C40,55 50,75 50,75 C50,75 60,55 60,40 C60,30 55,25 50,25 C45,25 40,30 40,40 Z" fill="#FFE500" stroke="#000" stroke-width="1"/>
+    
+    <!-- Grüner Gitter-Unterteil -->
+    <path d="M40,65 C40,80 50,85 50,85 C50,85 60,80 60,65 Z" fill="#259C3D" stroke="#000" stroke-width="1"/>
+    
+    <!-- Grünes Gitter -->
+    <path d="M42,70 H58 M42,75 H58 M42,80 H58" stroke="#155E24" stroke-width="1"/>
+    <path d="M45,65 V85 M50,65 V85 M55,65 V85" stroke="#155E24" stroke-width="1"/>
+  </g>
+</svg>

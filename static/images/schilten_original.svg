@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <g>
+    <!-- Schilten - schwarzer Schild mit weißen Quadraten/Rechtecken -->
+    <path d="M30,15 L70,15 L70,75 L50,85 L30,75 Z" fill="#282828" stroke="#000" stroke-width="1"/>
+    
+    <!-- Weißes Kreuz in der Mitte -->
+    <path d="M50,30 L50,70 M35,50 L65,50" stroke="#FFF" stroke-width="5"/>
+    
+    <!-- Weiße Rechtecke an den Seiten -->
+    <rect x="35" y="25" width="10" height="15" fill="#FFF" stroke="#000" stroke-width="0.5"/>
+    <rect x="55" y="25" width="10" height="15" fill="#FFF" stroke="#000" stroke-width="0.5"/>
+    <rect x="35" y="60" width="10" height="15" fill="#FFF" stroke="#000" stroke-width="0.5"/>
+    <rect x="55" y="60" width="10" height="15" fill="#FFF" stroke="#000" stroke-width="0.5"/>
+  </g>
+</svg>
