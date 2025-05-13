@@ -44,8 +44,9 @@
                     <div class="middle-section">
                         <div class="deck-area">
                             <div class="card-stack" id="deck">
-                                <div class="card-back">
-                                    <i class="fas fa-bars"></i>
+                                <!-- Kartenrückseite mit Jass-Design -->
+                                <div class="card-item card-back-jass">
+                                    <!-- Leere div für Kartenrückseite ohne Icon -->
                                 </div>
                             </div>
                             <button id="draw-card" class="btn btn-warning mt-2">
@@ -54,7 +55,9 @@
                         </div>
                         
                         <div class="discard-area">
-                            <div class="card-stack" id="discard-pile"></div>
+                            <div class="card-stack" id="discard-pile">
+                                <!-- Der Ablagestapel wird dynamisch gefüllt -->
+                            </div>
                             <div id="current-color" class="mt-2">Aktuelle Farbe: <span id="color-display">Keine</span></div>
                         </div>
                     </div>

@@ -889,6 +889,10 @@ document.addEventListener('DOMContentLoaded', function() {
         player1Area.classList.toggle('player-active', gameState.started && gameState.currentPlayer === 0);
         player2Area.classList.toggle('player-active', gameState.started && gameState.currentPlayer === 1);
         
+        // Deutlichere Markierung des aktuellen Spielers
+        player1Area.classList.toggle('current-player', gameState.started && gameState.currentPlayer === 0);
+        player2Area.classList.toggle('current-player', gameState.started && gameState.currentPlayer === 1);
+        
         // Update hands
         renderPlayerHands();
         
