@@ -1,37 +1,13 @@
-/* Jass card symbols */
-.jass-symbols {
-    gap: 20px;
-}
-
-.jass-symbol {
-    width: 70px;
-    height: 70px;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
+/* Jass logo */
+.jass-logo {
+    max-width: 400px;
+    margin: 0 auto;
     filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.3));
     transition: transform 0.3s ease;
-    margin: 0 10px;
 }
 
-.jass-symbol:hover {
-    transform: scale(1.1);
-}
-
-.rose {
-    background-image: url('../images/rose.svg');
-}
-
-.bell {
-    background-image: url('../images/bell.svg');
-}
-
-.shield {
-    background-image: url('../images/shield.svg');
-}
-
-.acorn {
-    background-image: url('../images/acorn.svg');
+.jass-logo:hover {
+    transform: scale(1.05);
 }
 
 /* Game board layout */
