@@ -1,0 +1,63 @@
+**TSCHAU SEPP – Spielregeln (angepasste Variante)**
+
+---
+
+🎯 **Ziel des Spiels**
+Alle Karten ablegen und als Erster korrekt „Tschau“ (bei 1 Karte) und „Sepp“ (bei 0 Karten) ansagen.
+
+---
+
+🔢 **Spielvorbereitung**
+– Gespielt wird mit einem **schweizerdeutschen** **Jass-Blatt** (36 Karten: 6 bis Ass pro Farbe)
+– Farben: **Rose**, **Schelle**, **Schilten**, **Eichel**
+– Jeder Spieler erhält **7 Karten**
+– Eine Karte wird offen auf den **Ablagestapel** gelegt
+– Der Rest bildet den **Ziehstapel**
+
+---
+
+🔄 **Spielablauf**
+– Gespielt wird im Uhrzeigersinn
+– Eine Karte darf abgelegt werden, wenn sie **die gleiche Farbe oder denselben Wert** hat wie die oberste Karte auf dem Stapel
+– Spezialkarten dürfen immer entsprechend ihrer Regeln gelegt werden
+– Kann ein Spieler keine passende Karte legen, muss er **eine Karte ziehen**
+– Die gezogene Karte darf direkt gespielt werden, falls sie passt
+
+---
+
+🎴 **Spezialkarten & Effekte**
+
+**7:**
+Der nächste Spieler muss **2 Karten ziehen.** Mehrere 7 können gestapelt werden, der Spieler der keine 7 hat, zieht entsprechend viele Karten.
+
+**8:**
+Der nächste Spieler **setzt aus**.
+
+**Bube:**
+Der Spieler darf eine **neue Farbe wünschen**.
+
+**Ober Rose:**
+Der nächste Spieler muss **4 Karten ziehen** oder selbst einen **Ober Rose** legen.
+Mehrere Ober Rose können gestapelt werden (z. B. 8 oder 12 Karten ziehen).
+
+**Ass:**
+Ein Ass darf **nur** mit einem **weiteren Ass** oder mit einer **Karte derselben Farbe** gedeckt werden.
+
+---
+
+🗣️ **Tschau & Sepp-Regel**
+– Hat ein Spieler **nur noch 1 Karte**, muss er „**Tschau**“ sagen oder drücken.
+– Hat ein Spieler **keine Karten mehr**, muss er „**Sepp**“ sagen oder drücken.
+– Wird dies vergessen → **1 Strafkarte ziehen**.
+
+---
+
+🚫 **Weitere Regeln**
+– Es dürfen **keine 2 gleichen Karten auf einmal gelegt werden**
+– Bei 7 oder Ober-Ketten **zählen nur passende Antworten**, sonst wird gezogen
+
+---
+
+✅ **Spielende**
+– Wer als Erster alle Karten abgelegt hat **und „Tschau Sepp“ korrekt angesagt hat**, gewinnt
+– In Punktemodi zählen die Restkarten der Gegner als Minuspunkte
