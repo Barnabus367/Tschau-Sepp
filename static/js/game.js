@@ -22,21 +22,21 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Card suits and values
-    const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
-    const values = ['7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+    const suits = ['rosen', 'schellen', 'schilten', 'eichel'];
+    const values = ['6', '7', '8', '9', 'U', 'O', 'K', 'A'];
     const suitSymbols = {
-        'hearts': '♥',
-        'diamonds': '♦',
-        'clubs': '♣',
-        'spades': '♠'
+        'rosen': '🌹',
+        'schellen': '🔔',
+        'schilten': '🛡️',
+        'eichel': '🌰'
     };
     
     // German translations
     const suitNames = {
-        'hearts': 'Herz',
-        'diamonds': 'Karo',
-        'clubs': 'Kreuz',
-        'spades': 'Pik'
+        'rosen': 'Rose',
+        'schellen': 'Schelle',
+        'schilten': 'Schilten',
+        'eichel': 'Eichel'
     };
 
     // DOM elements

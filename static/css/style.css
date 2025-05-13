@@ -255,23 +255,26 @@
 }
 
 #deck {
-    background-image: url('https://cdn.pixabay.com/photo/2012/05/07/18/57/card-game-49048_640.png');
+    background-image: url('../images/jass_cardback.svg');
     background-size: cover;
     background-position: center;
     transform: rotate(5deg);
+    background-color: white;
 }
 
 /* Card drawing animation */
 .animate-draw {
-    background: linear-gradient(135deg, #424242 0%, #212121 100%);
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    background-color: white;
+    background-image: url('../images/jass_cardback.svg');
+    background-size: cover;
+    border: 2px solid rgba(0, 0, 0, 0.5);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     overflow: hidden;
 }
 
 .card-back {
     font-size: 40px;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(0, 0, 0, 0.5);
 }
 
 /* Player hands */
@@ -356,40 +359,55 @@
     filter: grayscale(30%);
 }
 
-/* Card colors - with more vibrant gradients like UNO cards */
-.hearts {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff0000 60%, #cc0000 100%);
-    color: white;
-    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
-}
-
-.diamonds {
-    background: linear-gradient(135deg, #ff9191 0%, #ff3d3d 60%, #cc0000 100%);
-    color: white;
-    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
-}
-
-.clubs {
-    background: linear-gradient(135deg, #424242 0%, #212121 60%, #000000 100%);
-    color: white;
+/* Card colors - Jass card colors */
+.rosen {
+    background: white;
+    color: black;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,10 C55,25 75,35 85,50 C75,65 55,75 50,90 C45,75 25,65 15,50 C25,35 45,25 50,10 Z" fill="%23FFE500" stroke="%23000" stroke-width="2"/><circle cx="50" cy="50" r="12" fill="%23E53935"/></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 35%;
 }
 
-.spades {
-    background: linear-gradient(135deg, #5c5c5c 0%, #313131 60%, #000000 100%);
-    color: white;
+.schellen {
+    background: white;
+    color: black;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23FFE500" stroke="%23000" stroke-width="2"/><path d="M30,45 Q40,35 50,35 Q60,35 70,45" fill="none" stroke="%23000" stroke-width="2"/><path d="M30,45 Q40,60 50,60 Q60,60 70,45" fill="none" stroke="%23E53935" stroke-width="5"/><circle cx="30" cy="45" r="5" fill="%23000"/></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 35%;
 }
 
-/* Card value and suit - enhanced with UNO-like styling */
+.schilten {
+    background: white;
+    color: black;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M30,20 L70,20 L70,80 L50,90 L30,80 Z" fill="%23424242" stroke="%23000" stroke-width="2"/><circle cx="50" cy="35" r="5" fill="%23FFF"/><circle cx="50" cy="50" r="5" fill="%23FFF"/><circle cx="50" cy="65" r="5" fill="%23FFF"/><circle cx="50" cy="80" r="5" fill="%23FFF"/></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 35%;
+}
+
+.eichel {
+    background: white;
+    color: black;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M45,20 L55,20 L55,50 L50,60 L45,50 Z" fill="%23FFE500" stroke="%23000" stroke-width="2"/><path d="M35,50 C35,65 50,85 50,85 C50,85 65,65 65,50 C65,40 60,35 50,35 C40,35 35,40 35,50 Z" fill="%23FFE500" stroke="%23000" stroke-width="2"/><path d="M40,70 C40,80 50,90 50,90 C50,90 60,80 60,70 C60,65 55,60 50,60 C45,60 40,65 40,70 Z" fill="%234CAF50" stroke="%23000" stroke-width="2"/></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 35%;
+}
+
+/* Card value and suit - Jass card styling */
 .card-value {
     font-size: 26px;
     font-weight: bold;
     position: absolute;
     top: 5px;
     left: 5px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    color: white;
+    color: black;
     z-index: 2;
 }
 
@@ -398,10 +416,9 @@
     position: absolute;
     bottom: -35px;
     right: -35px;
-    font-size: 38px;
-    opacity: 0.2;
+    font-size: 26px;
     transform: rotate(180deg);
-    color: rgba(255, 255, 255, 0.6);
+    color: black;
 }
 
 .card-suit {
