@@ -434,22 +434,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 addMessage('Nächster Spieler muss aussetzen.');
                 break;
                 
-            case 'J':
+            case 'U': // Bube für Unter
                 // Player can choose a new color
                 if (!isStartCard) { // Don't prompt for color if this is the start card
                     gameState.waitingForColorSelection = true;
-                    gameState.specialEffectActive = 'J';
+                    gameState.specialEffectActive = 'U';
                     colorSelection.classList.remove('d-none');
                     addMessage('Spieler muss eine neue Farbe wählen.');
                 }
                 break;
                 
-            case 'Q':
+            case 'O': // Ober (war vorher Q für Queen)
                 // If it's the Queen of Hearts (Rose)
-                if (card.suit === 'hearts') {
+                if (card.suit === 'rosen') { // Rosen = hearts
                     gameState.mustDrawCards = 4;
-                    gameState.specialEffectActive = 'Q';
-                    addMessage('Nächster Spieler muss 4 Karten ziehen oder einen Herz-Ober spielen.');
+                    gameState.specialEffectActive = 'O';
+                    addMessage('Nächster Spieler muss 4 Karten ziehen oder einen Rosen-Ober spielen.');
                 }
                 break;
                 
@@ -480,12 +480,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 effectContent = 'SKIP';
                 effectClass = 'effect-skip';
                 break;
-            case 'J':
+            case 'U': // Bube (Unter)
                 effectContent = 'WÄHLE FARBE';
                 effectClass = 'effect-color';
                 break;
-            case 'Q':
-                if (card.suit === 'hearts') {
+            case 'O': // Ober
+                if (card.suit === 'rosen') { // Rosen = hearts in Schweizer Karten
                     effectContent = '+4';
                     effectClass = 'effect-plus-four';
                 }
