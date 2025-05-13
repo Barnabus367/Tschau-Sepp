@@ -60,6 +60,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const colorDisplay = document.getElementById('color-display');
     const gameTimer = document.getElementById('game-timer');
 
+    // Timer functions
+    function startTimer() {
+        // Clear any existing timer
+        if (gameState.timerInterval) {
+            clearInterval(gameState.timerInterval);
+        }
+        
+        gameState.gameTime = 0;
+        updateTimerDisplay();
+        
+        // Start a new timer that updates every second
+        gameState.timerInterval = setInterval(() => {
+            gameState.gameTime++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+    
+    function stopTimer() {
+        if (gameState.timerInterval) {
+            clearInterval(gameState.timerInterval);
+            gameState.timerInterval = null;
+        }
+    }
+    
+    function updateTimerDisplay() {
+        const minutes = Math.floor(gameState.gameTime / 60);
+        const seconds = gameState.gameTime % 60;
+        gameTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
     // Initialize event listeners
     function initEventListeners() {
         startGameBtn.addEventListener('click', startNewGame);
@@ -98,6 +128,9 @@ document.addEventListener('DOMContentLoaded', function() {
         gameState.mustPlaySameColor = false;
         gameState.acePlayed = false;
         
+        // Start the game timer
+        startTimer();
+        
         // Create and shuffle the deck
         createDeck();
         shuffleDeck();
@@ -115,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
         handleSpecialCardEffects(startCard, true);
         
         // Log game start
-        addMessage('Game started! ' + gameState.players[gameState.currentPlayer].name + '\'s turn.');
+        addMessage('Spiel gestartet! ' + gameState.players[gameState.currentPlayer].name + ' ist an der Reihe.');
         
         // Update UI
         updateUI();
@@ -157,51 +190,105 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentPlayerObj = gameState.players[gameState.currentPlayer];
         let drawnCards = 0;
         
+        // Add card drawing animation
+        const deckElem = document.getElementById('deck');
+        const playerHand = gameState.currentPlayer === 0 ? player1Hand : player2Hand;
+        
         // If there's a special effect active that requires drawing cards
         if (gameState.mustDrawCards > 0) {
-            for (let i = 0; i < gameState.mustDrawCards; i++) {
-                if (gameState.deck.length === 0) {
-                    reshuffleDeck();
+            // Animate drawing multiple cards
+            animateCardDraw(deckElem, playerHand, gameState.mustDrawCards, () => {
+                for (let i = 0; i < gameState.mustDrawCards; i++) {
+                    if (gameState.deck.length === 0) {
+                        reshuffleDeck();
+                    }
+                    if (gameState.deck.length > 0) {
+                        const card = gameState.deck.pop();
+                        currentPlayerObj.hand.push(card);
+                        drawnCards++;
+                    }
                 }
-                if (gameState.deck.length > 0) {
-                    const card = gameState.deck.pop();
-                    currentPlayerObj.hand.push(card);
-                    drawnCards++;
-                }
-            }
-            
-            addMessage(`${currentPlayerObj.name} drew ${drawnCards} cards (penalty).`);
-            gameState.mustDrawCards = 0;
-            
-            // Move to next player
-            nextTurn();
-            updateUI();
+                
+                addMessage(`${currentPlayerObj.name} zieht ${drawnCards} Karten (Strafe).`);
+                gameState.mustDrawCards = 0;
+                
+                // Move to next player
+                nextTurn();
+                updateUI();
+            });
             return;
         }
         
-        // Regular card draw
+        // Regular card draw with animation
         if (gameState.deck.length === 0) {
             reshuffleDeck();
         }
         
         if (gameState.deck.length > 0) {
-            const card = gameState.deck.pop();
-            currentPlayerObj.hand.push(card);
-            addMessage(`${currentPlayerObj.name} drew a card.`);
-            
-            // Check if the drawn card can be played
-            if (canPlayCard(card)) {
-                // Allow the player to play the card they just drew
-                renderPlayerHands();
-            } else {
-                // Move to next player
-                nextTurn();
-            }
+            // Animate drawing a single card
+            animateCardDraw(deckElem, playerHand, 1, () => {
+                const card = gameState.deck.pop();
+                currentPlayerObj.hand.push(card);
+                addMessage(`${currentPlayerObj.name} zieht eine Karte.`);
+                
+                // Check if the drawn card can be played
+                if (canPlayCard(card)) {
+                    // Allow the player to play the card they just drew
+                    renderPlayerHands();
+                } else {
+                    // Move to next player
+                    nextTurn();
+                }
+                updateUI();
+            });
         } else {
-            addMessage('No cards left to draw!');
+            addMessage('Keine Karten mehr zum Ziehen!');
+            updateUI();
         }
+    }
+    
+    // Animate drawing a card
+    function animateCardDraw(deckElem, playerHand, count, callback) {
+        const deckRect = deckElem.getBoundingClientRect();
+        const handRect = playerHand.getBoundingClientRect();
         
-        updateUI();
+        let cardsAnimated = 0;
+        
+        // Create a temporary animated card for each card being drawn
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                const tempCard = document.createElement('div');
+                tempCard.className = 'card-item card-back animate-draw';
+                tempCard.style.position = 'absolute';
+                tempCard.style.left = `${deckRect.left}px`;
+                tempCard.style.top = `${deckRect.top}px`;
+                tempCard.style.width = '90px';
+                tempCard.style.height = '130px';
+                tempCard.style.zIndex = '1000';
+                tempCard.style.transition = 'all 0.5s ease-out';
+                
+                document.body.appendChild(tempCard);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    tempCard.style.left = `${handRect.left + 50}px`;
+                    tempCard.style.top = `${handRect.top + 50}px`;
+                    tempCard.style.transform = 'scale(0.8)';
+                    tempCard.style.opacity = '0.8';
+                }, 50);
+                
+                // Remove the temporary card when animation completes
+                setTimeout(() => {
+                    tempCard.remove();
+                    cardsAnimated++;
+                    
+                    // Call the callback when all cards have been animated
+                    if (cardsAnimated === count && callback) {
+                        callback();
+                    }
+                }, 600);
+            }, i * 300); // Stagger the animations
+        }
     }
 
     // Reshuffle the discard pile into the deck
@@ -354,11 +441,18 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (currentPlayerObj.hand.length === 1) {
             currentPlayerObj.hasCalled.tschau = true;
-            addMessage(`${currentPlayerObj.name} calls "Tschau"!`);
+            addMessage(`${currentPlayerObj.name} ruft "Tschau"!`);
             tschauBtn.classList.add('d-none');
+            
+            // Add visual indication
+            const playerArea = gameState.currentPlayer === 0 ? player1Area : player2Area;
+            playerArea.classList.add('tschau-called');
+            setTimeout(() => {
+                playerArea.classList.remove('tschau-called');
+            }, 2000);
         } else {
             // Penalty for wrong call
-            addMessage(`${currentPlayerObj.name} called "Tschau" at the wrong time! +2 cards penalty.`);
+            addMessage(`${currentPlayerObj.name} hat "Tschau" zur falschen Zeit gerufen! +2 Strafkarten.`);
             for (let i = 0; i < 2; i++) {
                 if (gameState.deck.length === 0) {
                     reshuffleDeck();
@@ -378,15 +472,21 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (currentPlayerObj.hand.length === 0) {
             currentPlayerObj.hasCalled.sepp = true;
-            addMessage(`${currentPlayerObj.name} calls "Sepp" and wins the game!`);
+            addMessage(`${currentPlayerObj.name} ruft "Sepp" und gewinnt das Spiel!`);
             seppBtn.classList.add('d-none');
             
             // End the game
             gameState.started = false;
-            startGameBtn.textContent = 'Start New Game';
+            startGameBtn.textContent = 'Neues Spiel';
+            
+            // Stop the timer
+            stopTimer();
+            
+            // Show winning animation
+            showWinningAnimation(gameState.currentPlayer);
         } else {
             // Penalty for wrong call
-            addMessage(`${currentPlayerObj.name} called "Sepp" at the wrong time! +2 cards penalty.`);
+            addMessage(`${currentPlayerObj.name} hat "Sepp" zur falschen Zeit gerufen! +2 Strafkarten.`);
             for (let i = 0; i < 2; i++) {
                 if (gameState.deck.length === 0) {
                     reshuffleDeck();
@@ -398,6 +498,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         updateUI();
+    }
+    
+    // Show winning animation for the player who won
+    function showWinningAnimation(playerIndex) {
+        const playerArea = playerIndex === 0 ? player1Area : player2Area;
+        playerArea.classList.add('winner');
+        
+        // Create confetti effect
+        for (let i = 0; i < 50; i++) {
+            createConfetti(playerArea);
+        }
+    }
+    
+    // Create a confetti particle
+    function createConfetti(container) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        
+        // Random color
+        const colors = ['#ffd700', '#ff0000', '#00ff00', '#0000ff', '#ff00ff'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.backgroundColor = randomColor;
+        
+        // Random position, size and rotation
+        const size = Math.random() * 10 + 5;
+        confetti.style.width = `${size}px`;
+        confetti.style.height = `${size}px`;
+        
+        confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.top = `-10px`;
+        
+        const duration = Math.random() * 3 + 2;
+        confetti.style.animation = `fall ${duration}s linear forwards`;
+        
+        container.appendChild(confetti);
+        
+        // Remove confetti after animation
+        setTimeout(() => {
+            confetti.remove();
+        }, duration * 1000);
     }
 
     // Move to the next player's turn
@@ -540,6 +680,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function addMessage(message) {
         const messageElement = document.createElement('p');
         messageElement.textContent = message;
+        
+        // Add a timestamp
+        const now = new Date();
+        const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'message-time';
+        timeSpan.textContent = time;
+        
+        messageElement.prepend(timeSpan, ' ');
         messageLog.appendChild(messageElement);
         messageLog.scrollTop = messageLog.scrollHeight;
     }
@@ -548,12 +697,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateUI() {
         // Update game status
         if (!gameState.started) {
-            gameStatus.textContent = 'Game not started';
+            gameStatus.textContent = 'Spiel nicht gestartet';
             currentPlayer.textContent = '';
             drawCardBtn.disabled = true;
         } else {
-            gameStatus.textContent = 'Game in progress';
-            currentPlayer.textContent = `${gameState.players[gameState.currentPlayer].name}'s turn`;
+            gameStatus.textContent = 'Spiel läuft';
+            currentPlayer.textContent = `${gameState.players[gameState.currentPlayer].name} ist an der Reihe`;
             drawCardBtn.disabled = gameState.waitingForColorSelection;
         }
         

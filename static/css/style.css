@@ -118,6 +118,41 @@
     100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
 }
 
+/* Tschau called animation */
+.tschau-called {
+    position: relative;
+}
+
+.tschau-called::after {
+    content: 'TSCHAU!';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    font-weight: bold;
+    color: #ff9800;
+    text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+    animation: tschau-animation 2s forwards;
+    pointer-events: none;
+    z-index: 100;
+}
+
+@keyframes tschau-animation {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+    }
+}
+
 /* Middle section with deck and discard pile */
 .middle-section {
     position: absolute;
@@ -156,6 +191,14 @@
     background-size: cover;
     background-position: center;
     transform: rotate(5deg);
+}
+
+/* Card drawing animation */
+.animate-draw {
+    background: linear-gradient(135deg, #424242 0%, #212121 100%);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
 }
 
 .card-back {
@@ -349,6 +392,40 @@
     font-size: 18px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     z-index: 100;
+}
+
+/* Winning player animation */
+.winner {
+    animation: winner-glow 2s infinite alternate;
+}
+
+@keyframes winner-glow {
+    from {
+        box-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+    }
+    to {
+        box-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700;
+    }
+}
+
+/* Confetti animation */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    z-index: 100;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(300px) rotate(720deg);
+        opacity: 0;
+    }
 }
 
 /* Responsive adjustments */
