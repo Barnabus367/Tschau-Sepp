@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
         started: false,
         currentPlayer: 0, // 0 for player 1, 1 for player 2
         players: [
-            { id: 0, name: 'Player 1', hand: [], hasCalled: { tschau: false, sepp: false } },
-            { id: 1, name: 'Player 2', hand: [], hasCalled: { tschau: false, sepp: false } }
+            { id: 0, name: 'Spieler 1', hand: [], hasCalled: { tschau: false, sepp: false } },
+            { id: 1, name: 'Spieler 2', hand: [], hasCalled: { tschau: false, sepp: false } }
         ],
         deck: [],
         discardPile: [],
@@ -16,7 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
         skipNextPlayer: false,
         mustDrawCards: 0,
         mustPlaySameColor: false,
-        acePlayed: false
+        acePlayed: false,
+        gameTime: 0,
+        timerInterval: null
     };
 
     // Card suits and values
@@ -27,6 +29,14 @@ document.addEventListener('DOMContentLoaded', function() {
         'diamonds': '♦',
         'clubs': '♣',
         'spades': '♠'
+    };
+    
+    // German translations
+    const suitNames = {
+        'hearts': 'Herz',
+        'diamonds': 'Karo',
+        'clubs': 'Kreuz',
+        'spades': 'Pik'
     };
 
     // DOM elements
@@ -48,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentPlayer = document.getElementById('current-player');
     const messageLog = document.getElementById('message-log');
     const colorDisplay = document.getElementById('color-display');
+    const gameTimer = document.getElementById('game-timer');
 
     // Initialize event listeners
     function initEventListeners() {

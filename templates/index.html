@@ -11,61 +11,32 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="container py-4">
+    <div class="container-fluid py-4">
         <header class="text-center mb-4">
             <h1 class="display-4">Tschau Sepp</h1>
-            <p class="lead">A card game similar to UNO</p>
+            <p class="lead">Ein Kartenspiel ähnlich wie UNO</p>
         </header>
 
-        <!-- Game status and controls -->
-        <div class="row justify-content-center mb-4">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 id="game-status" class="mb-0">Game not started</h5>
-                                <p id="current-player" class="mb-0"></p>
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+                <!-- Game timer -->
+                <div class="game-timer" id="game-timer">00:00</div>
+                
+                <!-- Game board -->
+                <div class="game-board position-relative">
+                    <!-- Game table background -->
+                    <div class="game-table"></div>
+                    
+                    <!-- Player 2's hand (top) -->
+                    <div class="player-area" id="player2-area">
+                        <div class="player-profile">
+                            <div class="player-avatar">
+                                <i class="fas fa-user"></i>
                             </div>
-                            <div>
-                                <button id="start-game" class="btn btn-secondary">Start New Game</button>
-                                <button id="tschau-button" class="btn btn-warning d-none">Tschau!</button>
-                                <button id="sepp-button" class="btn btn-success d-none">Sepp!</button>
-                            </div>
+                            <h3 class="player-name" id="player2-name">Spieler 2</h3>
+                            <div class="card-count">Karten: <span id="player2-card-count">0</span></div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Color selection for Jack (Bube) -->
-        <div class="row justify-content-center mb-4 d-none" id="color-selection">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Choose a color</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-around">
-                            <button class="btn color-btn" data-color="hearts" style="background-color: #d12c2c;">Hearts</button>
-                            <button class="btn color-btn" data-color="diamonds" style="background-color: #d12c2c;">Diamonds</button>
-                            <button class="btn color-btn" data-color="clubs" style="background-color: #333;">Clubs</button>
-                            <button class="btn color-btn" data-color="spades" style="background-color: #333;">Spades</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Game board -->
-        <div class="row justify-content-center mb-4">
-            <div class="col-md-8">
-                <div class="game-board">
-                    <!-- Player 1's hand -->
-                    <div class="player-area" id="player1-area">
-                        <h3 class="player-name" id="player1-name">Player 1</h3>
-                        <div class="card-count">Cards: <span id="player1-card-count">0</span></div>
-                        <div class="hand" id="player1-hand"></div>
+                        <div class="hand" id="player2-hand"></div>
                     </div>
                     
                     <!-- Middle section with deck and discard pile -->
@@ -76,34 +47,61 @@
                                     <i class="fas fa-bars"></i>
                                 </div>
                             </div>
-                            <button id="draw-card" class="btn btn-secondary mt-2">Draw Card</button>
+                            <button id="draw-card" class="btn btn-warning mt-2">Karte ziehen</button>
                         </div>
                         
                         <div class="discard-area">
                             <div class="card-stack" id="discard-pile"></div>
-                            <div id="current-color" class="mt-2">Current color: <span id="color-display">None</span></div>
+                            <div id="current-color" class="mt-2">Aktuelle Farbe: <span id="color-display">Keine</span></div>
                         </div>
                     </div>
                     
-                    <!-- Player 2's hand -->
-                    <div class="player-area" id="player2-area">
-                        <h3 class="player-name" id="player2-name">Player 2</h3>
-                        <div class="card-count">Cards: <span id="player2-card-count">0</span></div>
-                        <div class="hand" id="player2-hand"></div>
+                    <!-- Player 1's hand (bottom) -->
+                    <div class="player-area" id="player1-area">
+                        <div class="player-profile">
+                            <div class="player-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3 class="player-name" id="player1-name">Spieler 1</h3>
+                            <div class="card-count">Karten: <span id="player1-card-count">0</span></div>
+                        </div>
+                        <div class="hand" id="player1-hand"></div>
+                    </div>
+                    
+                    <!-- Game action buttons -->
+                    <div class="game-actions">
+                        <button id="start-game" class="btn btn-primary">Neues Spiel</button>
+                        <button id="tschau-button" class="btn btn-warning d-none">Tschau!</button>
+                        <button id="sepp-button" class="btn btn-success d-none">Sepp!</button>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Game messages -->
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Game Messages</h5>
+                
+                <!-- Color selection for Jack (Bube) -->
+                <div class="d-none" id="color-selection">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Wähle eine Farbe</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-around">
+                                <button class="btn color-btn" data-color="hearts" style="background-color: #ff5252;">Herz</button>
+                                <button class="btn color-btn" data-color="diamonds" style="background-color: #ff5252;">Karo</button>
+                                <button class="btn color-btn" data-color="clubs" style="background-color: #424242;">Kreuz</button>
+                                <button class="btn color-btn" data-color="spades" style="background-color: #424242;">Pik</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game status display -->
+                <div class="card mt-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Spielstatus</h5>
+                        <span id="game-status" class="badge bg-secondary">Spiel nicht gestartet</span>
                     </div>
                     <div class="card-body">
-                        <div id="message-log" class="message-log"></div>
+                        <p id="current-player" class="mb-0"></p>
+                        <div id="message-log" class="message-log mt-2"></div>
                     </div>
                 </div>
             </div>
@@ -114,30 +112,30 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="rulesModalLabel">Tschau Sepp Rules</h5>
+                        <h5 class="modal-title" id="rulesModalLabel">Tschau Sepp Regeln</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <h6>Basic Rules:</h6>
+                        <h6>Grundregeln:</h6>
                         <ul>
-                            <li>Each player starts with 7 cards</li>
-                            <li>Players take turns playing a card that matches either the color or the value of the top card</li>
-                            <li>If a player cannot play a card, they must draw from the deck</li>
-                            <li>When a player has only one card left, they must press "Tschau"</li>
-                            <li>When a player has no cards left, they must press "Sepp" to win</li>
+                            <li>Jeder Spieler startet mit 7 Karten</li>
+                            <li>Spieler legen abwechselnd Karten ab, die entweder in der Farbe oder im Wert mit der obersten Karte übereinstimmen</li>
+                            <li>Wenn ein Spieler keine passende Karte hat, muss er eine Karte vom Stapel ziehen</li>
+                            <li>Wenn ein Spieler nur noch eine Karte auf der Hand hat, muss er "Tschau" drücken</li>
+                            <li>Wenn ein Spieler keine Karten mehr hat, muss er "Sepp" drücken, um zu gewinnen</li>
                         </ul>
                         
-                        <h6>Special Cards:</h6>
+                        <h6>Spezialkarten:</h6>
                         <ul>
-                            <li><strong>7:</strong> Next player draws 2 cards</li>
-                            <li><strong>8:</strong> Next player skips a turn</li>
-                            <li><strong>Jack (Bube):</strong> Player can choose a new color</li>
-                            <li><strong>Queen of Hearts (Ober Rose):</strong> Next player draws 4 cards or plays another Queen of Hearts</li>
-                            <li><strong>Ace:</strong> Must be covered with a card of the same color or another Ace</li>
+                            <li><strong>7:</strong> Nächster Spieler zieht 2 Karten</li>
+                            <li><strong>8:</strong> Nächster Spieler setzt aus</li>
+                            <li><strong>Bube (Jack):</strong> Spieler darf eine neue Farbe wünschen</li>
+                            <li><strong>Herz-Ober (Queen of Hearts):</strong> Nächster Spieler zieht 4 Karten oder legt selbst einen Herz-Ober</li>
+                            <li><strong>Ass:</strong> Muss mit einer Karte der gleichen Farbe oder einem weiteren Ass gedeckt werden</li>
                         </ul>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
                     </div>
                 </div>
             </div>
@@ -145,7 +143,7 @@
 
         <!-- Footer with rules button -->
         <footer class="text-center mt-4">
-            <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#rulesModal">Game Rules</button>
+            <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#rulesModal">Spielregeln</button>
         </footer>
     </div>
 
