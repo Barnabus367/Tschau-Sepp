@@ -147,8 +147,26 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle if the start card is a special card
         handleSpecialCardEffects(startCard, true);
         
-        // Log game start
-        addMessage('Spiel gestartet! ' + gameState.players[gameState.currentPlayer].name + ' ist an der Reihe.');
+        // Log game start and first card
+        addMessage(`Spiel gestartet! Die erste aufgedeckte Karte ist ${startCard.value} ${suitNames[startCard.suit]}.`);
+        addMessage(`${gameState.players[gameState.currentPlayer].name} ist an der Reihe.`);
+        
+        // Zeige Animation für die erste Karte
+        setTimeout(() => {
+            const firstCardIndicator = document.createElement('div');
+            firstCardIndicator.className = 'start-card-indicator';
+            firstCardIndicator.textContent = '⬅ Erste Karte';
+            document.querySelector('.discard-area').appendChild(firstCardIndicator);
+            
+            setTimeout(() => {
+                if (firstCardIndicator) {
+                    firstCardIndicator.classList.add('fade-out');
+                    setTimeout(() => {
+                        if (firstCardIndicator) firstCardIndicator.remove();
+                    }, 1500);
+                }
+            }, 4000);
+        }, 500);
         
         // Update UI
         updateUI();
@@ -763,7 +781,10 @@ document.addEventListener('DOMContentLoaded', function() {
         cardElement.className = `card-item card-real-image`;
         
         // Richtiger Pfad für die Karten-Images (korrigiert)
-        let cardImagePath = `/static/images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg`;
+        let cardImagePath = `../static/images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg`;
+        
+        // Debug-Infos für die Fehlersuche
+        console.log(`Karte ${card.value} ${card.suit} verwendet Bildindex ${imageIndex}, Pfad: ${cardImagePath}`);
         
         // Debugging-Infos in die Karte einfügen
         cardElement.setAttribute('data-suit', card.suit);
@@ -843,7 +864,10 @@ document.addEventListener('DOMContentLoaded', function() {
             cardElement.className = `card-item card-real-image`;
             
             // Richtiger Pfad für die Karten-Images (korrigiert)
-            let cardImagePath = `/static/images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg`;
+            let cardImagePath = `../static/images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg`;
+            
+            // Debug-Infos für die Fehlersuche
+            console.log(`Ablagestapel: Karte ${topCard.value} ${topCard.suit} verwendet Bildindex ${imageIndex}, Pfad: ${cardImagePath}`);
             
             // Debugging-Infos in die Karte einfügen
             cardElement.setAttribute('data-suit', topCard.suit);

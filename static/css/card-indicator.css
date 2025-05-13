@@ -1,0 +1,38 @@
+/* Stil für den ersten Kartenindikator */
+.start-card-indicator {
+    position: absolute;
+    right: -120px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 152, 0, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+    animation: pulse-indicator 1.5s infinite alternate;
+    z-index: 100;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.start-card-indicator::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 10px 10px 10px 0;
+    border-style: solid;
+    border-color: transparent rgba(255, 152, 0, 0.9) transparent transparent;
+}
+
+.start-card-indicator.fade-out {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+}
+
+@keyframes pulse-indicator {
+    0% { transform: translateY(-50%) scale(1); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4); }
+    100% { transform: translateY(-50%) scale(1.1); box-shadow: 0 3px 20px rgba(255, 152, 0, 0.7); }
+}
