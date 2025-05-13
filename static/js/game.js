@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let i = 0; i < count; i++) {
             setTimeout(() => {
                 const tempCard = document.createElement('div');
-                tempCard.className = 'card-item card-back animate-draw';
+                tempCard.className = 'card-item card-back-jass animate-draw';
                 tempCard.style.position = 'absolute';
                 tempCard.style.left = `${deckRect.left}px`;
                 tempCard.style.top = `${deckRect.top}px`;
@@ -762,8 +762,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const cardElement = document.createElement('div');
         cardElement.className = `card-item card-real-image`;
         
+        // Richtiger Pfad für die Karten-Images (korrigiert)
+        let cardImagePath = `/static/images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg`;
+        
+        // Debugging-Infos in die Karte einfügen
+        cardElement.setAttribute('data-suit', card.suit);
+        cardElement.setAttribute('data-value', card.value);
+        cardElement.setAttribute('data-image-index', imageIndex);
+        
         // Set the background image to the actual card image with correct path
-        cardElement.style.backgroundImage = `url('./static/images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg')`;
+        cardElement.style.backgroundImage = `url('${cardImagePath}')`;
         cardElement.style.backgroundSize = 'cover';
         cardElement.style.backgroundPosition = 'center';
         
@@ -834,8 +842,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const cardElement = document.createElement('div');
             cardElement.className = `card-item card-real-image`;
             
+            // Richtiger Pfad für die Karten-Images (korrigiert)
+            let cardImagePath = `/static/images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg`;
+            
+            // Debugging-Infos in die Karte einfügen
+            cardElement.setAttribute('data-suit', topCard.suit);
+            cardElement.setAttribute('data-value', topCard.value);
+            cardElement.setAttribute('data-image-index', imageIndex);
+            
             // Set the background image to the actual card image with correct path
-            cardElement.style.backgroundImage = `url('./static/images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg')`;
+            cardElement.style.backgroundImage = `url('${cardImagePath}')`;
             cardElement.style.backgroundSize = 'cover';
             cardElement.style.backgroundPosition = 'center';
             

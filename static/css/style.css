@@ -290,6 +290,14 @@
     color: rgba(0, 0, 0, 0.5);
 }
 
+.card-back-jass {
+    background-color: #ffffff;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="150" viewBox="0 0 100 150"><rect width="100" height="150" fill="%23D40000" rx="8" ry="8"/><rect x="10" y="10" width="80" height="130" fill="%23f9f9f9" rx="4" ry="4"/><path d="M20,30 L80,30 M20,60 L80,60 M20,90 L80,90 M20,120 L80,120" stroke="%23D40000" stroke-width="2"/><path d="M30,20 L30,130 M50,20 L50,130 M70,20 L70,130" stroke="%23D40000" stroke-width="2"/></svg>');
+    border: 2px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
 /* Player hands */
 .hand {
     display: flex;
