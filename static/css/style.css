@@ -1,0 +1,166 @@
+/* Game board layout */
+.game-board {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+/* Player areas */
+.player-area {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Active player indication */
+.player-active {
+    background-color: rgba(13, 110, 253, 0.3);
+    box-shadow: 0 0 10px rgba(13, 110, 253, 0.5);
+}
+
+/* Middle section with deck and discard pile */
+.middle-section {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Deck and discard areas */
+.deck-area, .discard-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Card stacks */
+.card-stack {
+    width: 120px;
+    height: 180px;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2b3035;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.card-back {
+    font-size: 60px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Player hands */
+.hand {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    min-height: 100px;
+}
+
+/* Individual cards */
+.card-item {
+    width: 80px;
+    height: 120px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.card-item.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Card colors */
+.hearts, .diamonds {
+    background-color: #d12c2c;
+    color: white;
+}
+
+.clubs, .spades {
+    background-color: #333;
+    color: white;
+}
+
+/* Card value and suit */
+.card-value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.card-suit {
+    font-size: 30px;
+}
+
+/* Message log */
+.message-log {
+    height: 150px;
+    overflow-y: auto;
+    font-size: 14px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.message-log p {
+    margin-bottom: 5px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    .game-board {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .player-area {
+        width: 28%;
+    }
+    
+    .middle-section {
+        width: 40%;
+    }
+    
+    #player1-area {
+        order: 1;
+    }
+    
+    .middle-section {
+        order: 2;
+    }
+    
+    #player2-area {
+        order: 3;
+    }
+    
+    .hand {
+        flex-direction: row;
+    }
+}
+
+/* Color display */
+#color-display {
+    font-weight: bold;
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tschau Sepp Card Game</title>
+    <!-- Use the Replit-themed bootstrap CSS -->
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container py-4">
+        <header class="text-center mb-4">
+            <h1 class="display-4">Tschau Sepp</h1>
+            <p class="lead">A card game similar to UNO</p>
+        </header>
+
+        <!-- Game status and controls -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 id="game-status" class="mb-0">Game not started</h5>
+                                <p id="current-player" class="mb-0"></p>
+                            </div>
+                            <div>
+                                <button id="start-game" class="btn btn-secondary">Start New Game</button>
+                                <button id="tschau-button" class="btn btn-warning d-none">Tschau!</button>
+                                <button id="sepp-button" class="btn btn-success d-none">Sepp!</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Color selection for Jack (Bube) -->
+        <div class="row justify-content-center mb-4 d-none" id="color-selection">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Choose a color</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-around">
+                            <button class="btn color-btn" data-color="hearts" style="background-color: #d12c2c;">Hearts</button>
+                            <button class="btn color-btn" data-color="diamonds" style="background-color: #d12c2c;">Diamonds</button>
+                            <button class="btn color-btn" data-color="clubs" style="background-color: #333;">Clubs</button>
+                            <button class="btn color-btn" data-color="spades" style="background-color: #333;">Spades</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game board -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8">
+                <div class="game-board">
+                    <!-- Player 1's hand -->
+                    <div class="player-area" id="player1-area">
+                        <h3 class="player-name" id="player1-name">Player 1</h3>
+                        <div class="card-count">Cards: <span id="player1-card-count">0</span></div>
+                        <div class="hand" id="player1-hand"></div>
+                    </div>
+                    
+                    <!-- Middle section with deck and discard pile -->
+                    <div class="middle-section">
+                        <div class="deck-area">
+                            <div class="card-stack" id="deck">
+                                <div class="card-back">
+                                    <i class="fas fa-bars"></i>
+                                </div>
+                            </div>
+                            <button id="draw-card" class="btn btn-secondary mt-2">Draw Card</button>
+                        </div>
+                        
+                        <div class="discard-area">
+                            <div class="card-stack" id="discard-pile"></div>
+                            <div id="current-color" class="mt-2">Current color: <span id="color-display">None</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Player 2's hand -->
+                    <div class="player-area" id="player2-area">
+                        <h3 class="player-name" id="player2-name">Player 2</h3>
+                        <div class="card-count">Cards: <span id="player2-card-count">0</span></div>
+                        <div class="hand" id="player2-hand"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game messages -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Game Messages</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="message-log" class="message-log"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game rules modal -->
+        <div class="modal fade" id="rulesModal" tabindex="-1" aria-labelledby="rulesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rulesModalLabel">Tschau Sepp Rules</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>Basic Rules:</h6>
+                        <ul>
+                            <li>Each player starts with 7 cards</li>
+                            <li>Players take turns playing a card that matches either the color or the value of the top card</li>
+                            <li>If a player cannot play a card, they must draw from the deck</li>
+                            <li>When a player has only one card left, they must press "Tschau"</li>
+                            <li>When a player has no cards left, they must press "Sepp" to win</li>
+                        </ul>
+                        
+                        <h6>Special Cards:</h6>
+                        <ul>
+                            <li><strong>7:</strong> Next player draws 2 cards</li>
+                            <li><strong>8:</strong> Next player skips a turn</li>
+                            <li><strong>Jack (Bube):</strong> Player can choose a new color</li>
+                            <li><strong>Queen of Hearts (Ober Rose):</strong> Next player draws 4 cards or plays another Queen of Hearts</li>
+                            <li><strong>Ace:</strong> Must be covered with a card of the same color or another Ace</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer with rules button -->
+        <footer class="text-center mt-4">
+            <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#rulesModal">Game Rules</button>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+</body>
+</html>
