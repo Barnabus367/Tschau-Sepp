@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <g>
+    <!-- Acorn Symbol -->
+    <path d="M45,15 L55,15 L55,40 L50,45 L45,40 Z" fill="#FFE500" stroke="#000" stroke-width="2"/>
+    
+    <!-- Acorn bottom -->
+    <path d="M35,45 C35,65 43,80 50,85 C57,80 65,65 65,45 C65,35 60,30 50,30 C40,30 35,35 35,45 Z" fill="#FFE500" stroke="#000" stroke-width="2"/>
+    
+    <!-- Green bottom part -->
+    <path d="M40,70 C40,80 50,90 50,90 C50,90 60,80 60,70 C60,65 55,60 50,60 C45,60 40,65 40,70 Z" fill="#4CAF50" stroke="#000" stroke-width="2"/>
+  </g>
+</svg>
