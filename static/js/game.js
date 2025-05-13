@@ -320,51 +320,91 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Check if the card can be played
         if (!canPlayCard(card)) {
-            addMessage(`${currentPlayerObj.name} can't play that card!`);
+            addMessage(`${currentPlayerObj.name} kann diese Karte nicht spielen!`);
             return;
         }
         
         // Special handling for Ace
         if (gameState.acePlayed && card.value !== 'A' && card.suit !== gameState.currentColor) {
-            addMessage(`${currentPlayerObj.name} must play a card of ${gameState.currentColor} or an Ace!`);
+            addMessage(`${currentPlayerObj.name} muss eine ${suitNames[gameState.currentColor]}-Karte oder ein Ass spielen!`);
             return;
         }
         
-        // Find and remove the card from the player's hand
+        // Find the card in the player's hand
         const cardIndex = currentPlayerObj.hand.findIndex(c => c.suit === card.suit && c.value === card.value);
         if (cardIndex !== -1) {
-            currentPlayerObj.hand.splice(cardIndex, 1);
+            // Create animation of the card being played
+            const sourceHand = playerIndex === 0 ? player1Hand : player2Hand;
+            const cardElements = sourceHand.querySelectorAll('.card-item');
+            const cardElement = cardElements[cardIndex];
+            
+            if (cardElement) {
+                // Create a clone of the card for animation
+                const cardClone = cardElement.cloneNode(true);
+                const rect = cardElement.getBoundingClientRect();
+                const discardRect = discardPile.getBoundingClientRect();
+                
+                // Position the clone absolutely
+                cardClone.style.position = 'absolute';
+                cardClone.style.left = `${rect.left}px`;
+                cardClone.style.top = `${rect.top}px`;
+                cardClone.style.width = `${rect.width}px`;
+                cardClone.style.height = `${rect.height}px`;
+                cardClone.style.zIndex = '1000';
+                cardClone.style.transition = 'all 0.3s ease-out';
+                
+                document.body.appendChild(cardClone);
+                
+                // Animate the card to the discard pile
+                setTimeout(() => {
+                    cardClone.style.left = `${discardRect.left + (discardRect.width - rect.width) / 2}px`;
+                    cardClone.style.top = `${discardRect.top + (discardRect.height - rect.height) / 2}px`;
+                    
+                    // Random rotation
+                    const rotation = Math.random() * 20 - 10;
+                    cardClone.style.transform = `rotate(${rotation}deg)`;
+                }, 10);
+                
+                // Remove the clone after animation and update game state
+                setTimeout(() => {
+                    cardClone.remove();
+                    
+                    // Actually remove the card from player's hand and continue
+                    currentPlayerObj.hand.splice(cardIndex, 1);
+                    
+                    // Add the card to the discard pile
+                    gameState.discardPile.push(card);
+                    gameState.currentColor = card.suit;
+                    gameState.currentValue = card.value;
+                    
+                    // Check for "Tschau" (1 card left) or "Sepp" (0 cards left)
+                    if (currentPlayerObj.hand.length === 1 && !currentPlayerObj.hasCalled.tschau) {
+                        // Show Tschau button
+                        tschauBtn.classList.remove('d-none');
+                    } else if (currentPlayerObj.hand.length === 0) {
+                        // Show Sepp button
+                        seppBtn.classList.remove('d-none');
+                    }
+                    
+                    // Handle special card effects
+                    handleSpecialCardEffects(card);
+                    
+                    // Log the card played
+                    addMessage(`${currentPlayerObj.name} spielt ${card.value} ${suitNames[card.suit]}.`);
+                    
+                    // Only move to the next player if no color selection is needed
+                    if (!gameState.waitingForColorSelection) {
+                        nextTurn();
+                    }
+                    
+                    updateUI();
+                }, 400);
+            } else {
+                console.error('Card element not found!');
+            }
         } else {
             console.error('Card not found in player hand!');
-            return;
         }
-        
-        // Add the card to the discard pile
-        gameState.discardPile.push(card);
-        gameState.currentColor = card.suit;
-        gameState.currentValue = card.value;
-        
-        // Check for "Tschau" (1 card left) or "Sepp" (0 cards left)
-        if (currentPlayerObj.hand.length === 1 && !currentPlayerObj.hasCalled.tschau) {
-            // Show Tschau button
-            tschauBtn.classList.remove('d-none');
-        } else if (currentPlayerObj.hand.length === 0) {
-            // Show Sepp button
-            seppBtn.classList.remove('d-none');
-        }
-        
-        // Handle special card effects
-        handleSpecialCardEffects(card);
-        
-        // Log the card played
-        addMessage(`${currentPlayerObj.name} played ${card.value} of ${card.suit}.`);
-        
-        // Only move to the next player if no color selection is needed
-        if (!gameState.waitingForColorSelection) {
-            nextTurn();
-        }
-        
-        updateUI();
     }
 
     // Handle special card effects
@@ -374,19 +414,24 @@ document.addEventListener('DOMContentLoaded', function() {
         gameState.skipNextPlayer = false;
         gameState.acePlayed = false;
         
+        // Display a visual effect based on the card type
+        if (!isStartCard) {
+            showCardEffect(card);
+        }
+        
         switch (card.value) {
             case '7':
                 // Next player draws 2 cards
                 gameState.mustDrawCards = 2;
                 gameState.specialEffectActive = '7';
-                addMessage('Next player must draw 2 cards or play a 7.');
+                addMessage('Nächster Spieler muss 2 Karten ziehen oder eine 7 spielen.');
                 break;
                 
             case '8':
                 // Next player skips a turn
                 gameState.skipNextPlayer = true;
                 gameState.specialEffectActive = '8';
-                addMessage('Next player must skip a turn.');
+                addMessage('Nächster Spieler muss aussetzen.');
                 break;
                 
             case 'J':
@@ -395,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     gameState.waitingForColorSelection = true;
                     gameState.specialEffectActive = 'J';
                     colorSelection.classList.remove('d-none');
-                    addMessage('Player must choose a new color.');
+                    addMessage('Spieler muss eine neue Farbe wählen.');
                 }
                 break;
                 
@@ -404,7 +449,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (card.suit === 'hearts') {
                     gameState.mustDrawCards = 4;
                     gameState.specialEffectActive = 'Q';
-                    addMessage('Next player must draw 4 cards or play a Queen of Hearts.');
+                    addMessage('Nächster Spieler muss 4 Karten ziehen oder einen Herz-Ober spielen.');
                 }
                 break;
                 
@@ -413,8 +458,56 @@ document.addEventListener('DOMContentLoaded', function() {
                 gameState.acePlayed = true;
                 gameState.specialEffectActive = 'A';
                 gameState.mustPlaySameColor = true;
-                addMessage('Next player must play the same color or an Ace.');
+                addMessage('Nächster Spieler muss die gleiche Farbe oder ein Ass spielen.');
                 break;
+        }
+    }
+    
+    // Show visual effect for special cards
+    function showCardEffect(card) {
+        const effectOverlay = document.createElement('div');
+        effectOverlay.className = 'effect-overlay';
+        
+        let effectContent = '';
+        let effectClass = '';
+        
+        switch (card.value) {
+            case '7':
+                effectContent = '+2';
+                effectClass = 'effect-plus-two';
+                break;
+            case '8':
+                effectContent = 'SKIP';
+                effectClass = 'effect-skip';
+                break;
+            case 'J':
+                effectContent = 'WÄHLE FARBE';
+                effectClass = 'effect-color';
+                break;
+            case 'Q':
+                if (card.suit === 'hearts') {
+                    effectContent = '+4';
+                    effectClass = 'effect-plus-four';
+                }
+                break;
+            case 'A':
+                effectContent = 'GLEICHE FARBE';
+                effectClass = 'effect-same-color';
+                break;
+        }
+        
+        if (effectContent) {
+            effectOverlay.innerHTML = `<div class="${effectClass}">${effectContent}</div>`;
+            document.body.appendChild(effectOverlay);
+            
+            setTimeout(() => {
+                effectOverlay.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                effectOverlay.classList.remove('show');
+                setTimeout(() => effectOverlay.remove(), 300);
+            }, 1200);
         }
     }
 
@@ -665,13 +758,18 @@ document.addEventListener('DOMContentLoaded', function() {
             cardElement.appendChild(valueElement);
             cardElement.appendChild(suitElement);
             
+            // Add a slight random rotation to the discard pile card
+            const rotation = Math.random() * 10 - 5; // Random rotation between -5 and 5 degrees
+            cardElement.style.transform = `rotate(${rotation}deg)`;
+            
             discardPile.appendChild(cardElement);
             
             // Update current color display
-            colorDisplay.textContent = topCard.suit.charAt(0).toUpperCase() + topCard.suit.slice(1);
+            const germanSuitName = suitNames[topCard.suit];
+            colorDisplay.textContent = germanSuitName;
             colorDisplay.style.color = topCard.suit === 'hearts' || topCard.suit === 'diamonds' ? '#d12c2c' : '#333';
         } else {
-            colorDisplay.textContent = 'None';
+            colorDisplay.textContent = 'Keine';
             colorDisplay.style.color = '';
         }
     }

@@ -334,6 +334,13 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.message-time {
+    font-weight: bold;
+    color: #ffc107;
+    margin-right: 6px;
+    font-size: 12px;
+}
+
 /* Color selection */
 #color-selection {
     position: absolute;
@@ -426,6 +433,68 @@
         transform: translateY(300px) rotate(720deg);
         opacity: 0;
     }
+}
+
+/* Effect overlay for special cards */
+.effect-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.effect-overlay.show {
+    opacity: 1;
+}
+
+.effect-overlay div {
+    font-size: 4rem;
+    font-weight: bold;
+    padding: 15px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+    animation: effect-bounce 0.5s ease-out;
+}
+
+@keyframes effect-bounce {
+    0% { transform: scale(0.1); }
+    60% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.effect-plus-two {
+    background-color: #ff9800;
+    color: white;
+}
+
+.effect-skip {
+    background-color: #f44336;
+    color: white;
+}
+
+.effect-color {
+    background: linear-gradient(to right, #f44336, #ffeb3b, #4caf50, #2196f3);
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.effect-plus-four {
+    background-color: #9c27b0;
+    color: white;
+}
+
+.effect-same-color {
+    background-color: #2196f3;
+    color: white;
 }
 
 /* Responsive adjustments */
