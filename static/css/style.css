@@ -340,33 +340,125 @@
     filter: grayscale(30%);
 }
 
-/* Card colors */
-.hearts, .diamonds {
-    background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%);
+/* Card colors - with more vibrant gradients like UNO cards */
+.hearts {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff0000 60%, #cc0000 100%);
     color: white;
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
 }
 
-.clubs, .spades {
-    background: linear-gradient(135deg, #424242 0%, #212121 100%);
+.diamonds {
+    background: linear-gradient(135deg, #ff9191 0%, #ff3d3d 60%, #cc0000 100%);
     color: white;
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
 }
 
-/* Card value and suit */
+.clubs {
+    background: linear-gradient(135deg, #424242 0%, #212121 60%, #000000 100%);
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.spades {
+    background: linear-gradient(135deg, #5c5c5c 0%, #313131 60%, #000000 100%);
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Card value and suit - enhanced with UNO-like styling */
 .card-value {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: bold;
     position: absolute;
     top: 5px;
     left: 5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: white;
+    z-index: 2;
+}
+
+.card-value::after {
+    content: attr(data-value);
+    position: absolute;
+    bottom: -35px;
+    right: -35px;
+    font-size: 38px;
+    opacity: 0.2;
+    transform: rotate(180deg);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .card-suit {
-    font-size: 40px;
-    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    font-size: 42px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 1;
 }
 
-#player2-hand .card-value, #player2-hand .card-suit {
+.card-suit::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 55px;
+    height: 55px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+/* Card corner decorations for UNO-like appearance */
+.card-corner {
+    position: absolute;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.top-left {
+    top: 5px;
+    left: 5px;
+}
+
+.bottom-right {
+    bottom: 5px;
+    right: 5px;
     transform: rotate(180deg);
+}
+
+#player2-hand .card-value, 
+#player2-hand .card-suit, 
+#player2-hand .top-left, 
+#player2-hand .bottom-right {
+    transform: rotate(180deg);
+}
+
+#player2-hand .bottom-right {
+    transform: rotate(0deg);
+}
+
+/* Card glow effect on hover */
+.card-item:hover::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 10px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    animation: pulse-border 1.5s infinite;
+    z-index: -1;
+}
+
+@keyframes pulse-border {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
 }
 
 /* Draw card button */

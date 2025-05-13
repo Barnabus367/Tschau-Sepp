@@ -726,27 +726,58 @@ document.addEventListener('DOMContentLoaded', function() {
         if (player2Profile) player2Profile.setAttribute('data-cards', gameState.players[1].hand.length);
     }
 
-    // Create a card element
+    // Create a card element - enhanced with UNO-like styling
     function createCardElement(card, playerIndex) {
         const cardElement = document.createElement('div');
         cardElement.className = `card-item ${card.suit}`;
         
+        // Add 3D effect
+        cardElement.style.transformStyle = "preserve-3d";
+        cardElement.style.perspective = "1000px";
+        
         if (!gameState.started || gameState.currentPlayer !== playerIndex || !canPlayCard(card)) {
             cardElement.classList.add('disabled');
         } else {
+            // Add interactive effects
             cardElement.addEventListener('click', () => playCard(card, playerIndex));
+            
+            // Slight tilt effect on hover for playable cards
+            cardElement.addEventListener('mouseover', (e) => {
+                const rect = cardElement.getBoundingClientRect();
+                const x = e.clientX - rect.left; 
+                const y = e.clientY - rect.top;
+                const tiltX = ((y / rect.height) - 0.5) * 10;
+                const tiltY = ((x / rect.width) - 0.5) * -10;
+                cardElement.style.transform = `rotate(calc(var(--card-angle, 0) * 1deg)) perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+            });
+            
+            cardElement.addEventListener('mouseout', () => {
+                cardElement.style.transform = `rotate(calc(var(--card-angle, 0) * 1deg))`;
+            });
         }
         
         const valueElement = document.createElement('div');
         valueElement.className = 'card-value';
         valueElement.textContent = card.value;
+        valueElement.setAttribute('data-value', card.value); // For the pseudo-element to display
         
         const suitElement = document.createElement('div');
         suitElement.className = 'card-suit';
         suitElement.textContent = suitSymbols[card.suit];
         
+        // Add decorative corner markers for a more UNO-like appearance
+        const cornerTopLeft = document.createElement('span');
+        cornerTopLeft.className = 'card-corner top-left';
+        cornerTopLeft.textContent = card.value;
+        
+        const cornerBottomRight = document.createElement('span');
+        cornerBottomRight.className = 'card-corner bottom-right';
+        cornerBottomRight.textContent = card.value;
+        
         cardElement.appendChild(valueElement);
         cardElement.appendChild(suitElement);
+        cardElement.appendChild(cornerTopLeft);
+        cardElement.appendChild(cornerBottomRight);
         
         return cardElement;
     }
