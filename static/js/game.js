@@ -757,11 +757,13 @@ document.addEventListener('DOMContentLoaded', function() {
             imageIndex = suitOffset[card.suit] + valueOffset[card.value];
         }
         
+        console.log("Karte mit Farbe:", card.suit, "Wert:", card.value, "verwendet Bild-Index:", imageIndex);
+        
         const cardElement = document.createElement('div');
         cardElement.className = `card-item card-real-image`;
         
-        // Set the background image to the actual card image
-        cardElement.style.backgroundImage = `url('../images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg')`;
+        // Set the background image to the actual card image with correct path
+        cardElement.style.backgroundImage = `url('./static/images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg')`;
         cardElement.style.backgroundSize = 'cover';
         cardElement.style.backgroundPosition = 'center';
         
@@ -827,11 +829,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 imageIndex = suitOffset[topCard.suit] + valueOffset[topCard.value];
             }
             
+            console.log("Ablagestapel Karte mit Farbe:", topCard.suit, "Wert:", topCard.value, "verwendet Bild-Index:", imageIndex);
+            
             const cardElement = document.createElement('div');
             cardElement.className = `card-item card-real-image`;
             
-            // Set the background image to the actual card image
-            cardElement.style.backgroundImage = `url('../images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg')`;
+            // Set the background image to the actual card image with correct path
+            cardElement.style.backgroundImage = `url('./static/images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg')`;
             cardElement.style.backgroundSize = 'cover';
             cardElement.style.backgroundPosition = 'center';
             
