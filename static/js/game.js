@@ -728,8 +728,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create a card element - enhanced with UNO-like styling
     function createCardElement(card, playerIndex) {
+        // Determine the correct image index based on suit and value
+        // Die Bilder sind von 0-35 nummeriert, und wir müssen die richtige Karte auswählen
+        let imageIndex = 0;
+        
+        // Karten sind in der Reihenfolge: Eichel (0-8), Rosen (9-17), Schellen (18-26), Schilten (27-35)
+        // Werte sind in der Reihenfolge: 6, 7, 8, 9, U, O, K, A in jeder Farbe
+        const suitOffset = {
+            'eichel': 0,
+            'rosen': 9,
+            'schellen': 18,
+            'schilten': 27
+        };
+        
+        const valueOffset = {
+            '6': 0,
+            '7': 1,
+            '8': 2,
+            '9': 3,
+            'U': 4,
+            'O': 5,
+            'K': 6,
+            'A': 7
+        };
+        
+        // Berechne den Index des Bildes
+        if (suitOffset[card.suit] !== undefined && valueOffset[card.value] !== undefined) {
+            imageIndex = suitOffset[card.suit] + valueOffset[card.value];
+        }
+        
         const cardElement = document.createElement('div');
-        cardElement.className = `card-item ${card.suit}`;
+        cardElement.className = `card-item card-real-image`;
+        
+        // Set the background image to the actual card image
+        cardElement.style.backgroundImage = `url('../images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg')`;
+        cardElement.style.backgroundSize = 'cover';
+        cardElement.style.backgroundPosition = 'center';
         
         // Add 3D effect
         cardElement.style.transformStyle = "preserve-3d";
@@ -756,28 +790,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        const valueElement = document.createElement('div');
-        valueElement.className = 'card-value';
-        valueElement.textContent = card.value;
-        valueElement.setAttribute('data-value', card.value); // For the pseudo-element to display
-        
-        const suitElement = document.createElement('div');
-        suitElement.className = 'card-suit';
-        suitElement.textContent = suitSymbols[card.suit];
-        
-        // Add decorative corner markers for a more UNO-like appearance
-        const cornerTopLeft = document.createElement('span');
-        cornerTopLeft.className = 'card-corner top-left';
-        cornerTopLeft.textContent = card.value;
-        
-        const cornerBottomRight = document.createElement('span');
-        cornerBottomRight.className = 'card-corner bottom-right';
-        cornerBottomRight.textContent = card.value;
-        
-        cardElement.appendChild(valueElement);
-        cardElement.appendChild(suitElement);
-        cardElement.appendChild(cornerTopLeft);
-        cardElement.appendChild(cornerBottomRight);
+        // Wir brauchen keine weiteren Elemente, da die Karte ein vollständiges Bild ist
         
         return cardElement;
     }

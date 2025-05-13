@@ -364,40 +364,40 @@
     background: white;
     color: black;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-    background-image: url('../images/rosen_original.svg');
+    background-image: url('../images/rosen_original.png');
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 50%;
+    background-size: 60%;
 }
 
 .schellen {
     background: white;
     color: black;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-    background-image: url('../images/schellen_original.svg');
+    background-image: url('../images/schellen_original.png');
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 50%;
+    background-size: 60%;
 }
 
 .schilten {
     background: white;
     color: black;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-    background-image: url('../images/schilten_original.svg');
+    background-image: url('../images/schilten_original.png');
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 50%;
+    background-size: 60%;
 }
 
 .eichel {
     background: white;
     color: black;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-    background-image: url('../images/eichel_original.svg');
+    background-image: url('../images/eichel_original.png');
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 50%;
+    background-size: 60%;
 }
 
 /* Card value and suit - Jass card styling */
