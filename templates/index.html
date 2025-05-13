@@ -29,12 +29,12 @@
                     
                     <!-- Player 2's hand (top) -->
                     <div class="player-area" id="player2-area">
-                        <div class="player-profile">
+                        <div class="player-profile" data-cards="0">
                             <div class="player-avatar">
                                 <i class="fas fa-user"></i>
                             </div>
                             <h3 class="player-name" id="player2-name">Spieler 2</h3>
-                            <div class="card-count">Karten: <span id="player2-card-count">0</span></div>
+                            <div class="card-count"><span id="player2-card-count">0</span> Karten</div>
                         </div>
                         <div class="hand" id="player2-hand"></div>
                     </div>
@@ -47,7 +47,9 @@
                                     <i class="fas fa-bars"></i>
                                 </div>
                             </div>
-                            <button id="draw-card" class="btn btn-warning mt-2">Karte ziehen</button>
+                            <button id="draw-card" class="btn btn-warning mt-2">
+                                <i class="fas fa-hand-paper me-1"></i> Karte ziehen
+                            </button>
                         </div>
                         
                         <div class="discard-area">
@@ -58,21 +60,32 @@
                     
                     <!-- Player 1's hand (bottom) -->
                     <div class="player-area" id="player1-area">
-                        <div class="player-profile">
+                        <div class="player-profile" data-cards="0">
                             <div class="player-avatar">
                                 <i class="fas fa-user"></i>
                             </div>
                             <h3 class="player-name" id="player1-name">Spieler 1</h3>
-                            <div class="card-count">Karten: <span id="player1-card-count">0</span></div>
+                            <div class="card-count"><span id="player1-card-count">0</span> Karten</div>
                         </div>
                         <div class="hand" id="player1-hand"></div>
                     </div>
                     
                     <!-- Game action buttons -->
                     <div class="game-actions">
-                        <button id="start-game" class="btn btn-primary">Neues Spiel</button>
-                        <button id="tschau-button" class="btn btn-warning d-none">Tschau!</button>
-                        <button id="sepp-button" class="btn btn-success d-none">Sepp!</button>
+                        <button id="start-game" class="btn btn-primary">
+                            <i class="fas fa-play me-1"></i> Neues Spiel
+                        </button>
+                        <button id="tschau-button" class="btn btn-warning d-none">
+                            <i class="fas fa-exclamation-circle me-1"></i> Tschau!
+                        </button>
+                        <button id="sepp-button" class="btn btn-success d-none">
+                            <i class="fas fa-trophy me-1"></i> Sepp!
+                        </button>
+                    </div>
+                    
+                    <!-- Direction indicator -->
+                    <div class="direction-indicator" id="direction-indicator">
+                        <i class="fas fa-arrow-circle-right"></i>
                     </div>
                 </div>
                 

@@ -8,10 +8,11 @@
     padding: 20px 0;
     height: 600px;
     position: relative;
-    background: linear-gradient(135deg, #4caf50, #8bc34a);
+    background: radial-gradient(circle, #4CAF50 0%, #2E7D32 100%);
     border-radius: 50%;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     overflow: hidden;
+    transition: all 0.5s ease;
 }
 
 /* Game table design */
@@ -23,9 +24,10 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: linear-gradient(135deg, #4caf50, #8bc34a);
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.2);
+    background: radial-gradient(circle, #4CAF50 0%, #2E7D32 100%);
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.3);
     z-index: 0;
+    overflow: hidden;
 }
 
 .game-table::after {
@@ -39,6 +41,23 @@
     transform: translate(-50%, -50%);
     background: rgba(255, 255, 255, 0.1);
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Game direction indicators */
+.game-table::before {
+    content: '';
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='100' height='100'%3E%3Cpath d='M50 10 A40 40 0 1 1 10 50' fill='none' stroke='rgba(255,255,255,0.2)' stroke-width='2' stroke-dasharray='5,5'/%3E%3Cpath d='M12 48 L8 50 L12 52Z' fill='rgba(255,255,255,0.4)'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    opacity: 0.7;
+    z-index: 0;
 }
 
 /* Player areas */
@@ -66,43 +85,76 @@
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    position: relative;
 }
 
 .player-avatar {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     background-color: #ffeb3b;
-    border: 3px solid white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border: 4px solid white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 20;
 }
 
 .player-avatar i {
-    font-size: 30px;
+    font-size: 35px;
     color: #333;
 }
 
+/* Player name with background pill */
 .player-name {
     margin: 0;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 5px 15px;
+    border-radius: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    z-index: 20;
 }
 
 .card-count {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 87, 34, 0.9);
     color: white;
-    border-radius: 12px;
-    padding: 2px 8px;
-    font-size: 12px;
-    margin-top: 5px;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 14px;
+    margin-top: 8px;
+    font-weight: bold;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    border: 2px solid white;
+}
+
+/* Add indicator for number of cards */
+.player-profile::after {
+    content: attr(data-cards);
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ff5722;
+    color: white;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid white;
+    z-index: 30;
 }
 
 /* Active player indication */
@@ -215,23 +267,26 @@
     margin: 0 auto;
     width: 100%;
     max-width: 500px;
+    perspective: 600px;
 }
 
 #player1-hand {
     transform-origin: bottom center;
+    z-index: 10;
 }
 
 #player2-hand {
     transform-origin: top center;
     transform: rotate(180deg);
+    z-index: 10;
 }
 
 /* Individual cards */
 .card-item {
     width: 70px;
     height: 100px;
-    border-radius: 5px;
-    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -239,28 +294,50 @@
     cursor: pointer;
     user-select: none;
     position: relative;
-    transition: transform 0.2s, box-shadow 0.2s;
-    margin-left: -20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-left: -25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, #f8f8f8 0%, #e0e0e0 100%);
+    transform: rotate(calc(var(--card-angle, 0) * 1deg));
 }
 
 .card-item:first-child {
     margin-left: 0;
 }
 
+/* Fan out cards in a player's hand */
+#player1-hand .card-item:nth-child(odd) {
+    --card-angle: -5;
+}
+
+#player1-hand .card-item:nth-child(even) {
+    --card-angle: 5;
+}
+
+#player2-hand .card-item:nth-child(odd) {
+    --card-angle: 5;
+}
+
+#player2-hand .card-item:nth-child(even) {
+    --card-angle: -5;
+}
+
+/* Card hover effects */
 .card-item:hover {
-    transform: translateY(-20px);
-    z-index: 20;
+    transform: translateY(-25px) rotate(calc(var(--card-angle, 0) * 1deg)) scale(1.1);
+    z-index: 30;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
 }
 
 #player2-hand .card-item:hover {
-    transform: translateY(20px) rotate(180deg);
+    transform: translateY(25px) rotate(calc(180deg + var(--card-angle, 0) * 1deg)) scale(1.1);
+    z-index: 30;
 }
 
 .card-item.disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    filter: grayscale(30%);
 }
 
 /* Card colors */
@@ -315,6 +392,36 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+/* Direction indicator */
+.direction-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    z-index: 5;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.direction-indicator i {
+    position: absolute;
+    font-size: 40px;
+    color: rgba(255, 255, 255, 0.3);
+    animation: rotate 10s linear infinite;
+    top: 10px;
+    transform-origin: center 115px;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 /* Message log */
@@ -442,7 +549,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -457,44 +564,57 @@
 }
 
 .effect-overlay div {
-    font-size: 4rem;
+    font-size: 4.5rem;
     font-weight: bold;
-    padding: 15px 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-    animation: effect-bounce 0.5s ease-out;
+    padding: 20px 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
+    animation: effect-bounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transform-style: preserve-3d;
 }
 
 @keyframes effect-bounce {
-    0% { transform: scale(0.1); }
-    60% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+    0% { transform: scale(0.1) rotateX(90deg); opacity: 0; }
+    50% { transform: scale(1.2) rotateX(0deg); opacity: 1; }
+    70% { transform: scale(0.9) rotateX(0deg); }
+    100% { transform: scale(1) rotateX(0deg); }
 }
 
 .effect-plus-two {
     background-color: #ff9800;
     color: white;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 3px solid white;
 }
 
 .effect-skip {
     background-color: #f44336;
     color: white;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 3px solid white;
 }
 
 .effect-color {
     background: linear-gradient(to right, #f44336, #ffeb3b, #4caf50, #2196f3);
     color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    border: 3px solid white;
 }
 
 .effect-plus-four {
     background-color: #9c27b0;
     color: white;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 3px solid white;
 }
 
 .effect-same-color {
     background-color: #2196f3;
     color: white;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 3px solid white;
 }
 
 /* Responsive adjustments */

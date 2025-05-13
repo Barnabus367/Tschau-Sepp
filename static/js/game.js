@@ -697,20 +697,33 @@ document.addEventListener('DOMContentLoaded', function() {
         player2Hand.innerHTML = '';
         
         // Render Player 1's hand
-        gameState.players[0].hand.forEach(card => {
+        gameState.players[0].hand.forEach((card, index) => {
             const cardElement = createCardElement(card, 0);
+            // Add slight rotation to fan out cards
+            const fanning = (index - (gameState.players[0].hand.length - 1) / 2) * 5;
+            cardElement.style.setProperty('--card-angle', fanning);
             player1Hand.appendChild(cardElement);
         });
         
         // Render Player 2's hand
-        gameState.players[1].hand.forEach(card => {
+        gameState.players[1].hand.forEach((card, index) => {
             const cardElement = createCardElement(card, 1);
+            // Add slight rotation to fan out cards
+            const fanning = (index - (gameState.players[1].hand.length - 1) / 2) * 5;
+            cardElement.style.setProperty('--card-angle', fanning);
             player2Hand.appendChild(cardElement);
         });
         
         // Update card counts
         player1CardCount.textContent = gameState.players[0].hand.length;
         player2CardCount.textContent = gameState.players[1].hand.length;
+        
+        // Update data-cards attributes for visual indicator
+        const player1Profile = player1Area.querySelector('.player-profile');
+        const player2Profile = player2Area.querySelector('.player-profile');
+        
+        if (player1Profile) player1Profile.setAttribute('data-cards', gameState.players[0].hand.length);
+        if (player2Profile) player2Profile.setAttribute('data-cards', gameState.players[1].hand.length);
     }
 
     // Create a card element
