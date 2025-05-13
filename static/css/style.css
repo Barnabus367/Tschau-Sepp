@@ -324,6 +324,12 @@
     margin-left: 0;
 }
 
+.card-real-image {
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+}
+
 /* Fan out cards in a player's hand */
 #player1-hand .card-item:nth-child(odd) {
     --card-angle: -5;

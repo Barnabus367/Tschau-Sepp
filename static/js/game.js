@@ -801,19 +801,39 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (gameState.discardPile.length > 0) {
             const topCard = gameState.discardPile[gameState.discardPile.length - 1];
+            
+            // Determine the correct image index based on suit and value
+            let imageIndex = 0;
+            const suitOffset = {
+                'eichel': 0,
+                'rosen': 9,
+                'schellen': 18,
+                'schilten': 27
+            };
+            
+            const valueOffset = {
+                '6': 0,
+                '7': 1,
+                '8': 2,
+                '9': 3,
+                'U': 4,
+                'O': 5,
+                'K': 6,
+                'A': 7
+            };
+            
+            // Berechne den Index des Bildes
+            if (suitOffset[topCard.suit] !== undefined && valueOffset[topCard.value] !== undefined) {
+                imageIndex = suitOffset[topCard.suit] + valueOffset[topCard.value];
+            }
+            
             const cardElement = document.createElement('div');
-            cardElement.className = `card-item ${topCard.suit}`;
+            cardElement.className = `card-item card-real-image`;
             
-            const valueElement = document.createElement('div');
-            valueElement.className = 'card-value';
-            valueElement.textContent = topCard.value;
-            
-            const suitElement = document.createElement('div');
-            suitElement.className = 'card-suit';
-            suitElement.textContent = suitSymbols[topCard.suit];
-            
-            cardElement.appendChild(valueElement);
-            cardElement.appendChild(suitElement);
+            // Set the background image to the actual card image
+            cardElement.style.backgroundImage = `url('../images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg')`;
+            cardElement.style.backgroundSize = 'cover';
+            cardElement.style.backgroundPosition = 'center';
             
             // Add a slight random rotation to the discard pile card
             const rotation = Math.random() * 10 - 5; // Random rotation between -5 and 5 degrees
@@ -824,7 +844,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update current color display
             const germanSuitName = suitNames[topCard.suit];
             colorDisplay.textContent = germanSuitName;
-            colorDisplay.style.color = topCard.suit === 'hearts' || topCard.suit === 'diamonds' ? '#d12c2c' : '#333';
+            colorDisplay.style.color = topCard.suit === 'rosen' ? '#d12c2c' : '#333';
         } else {
             colorDisplay.textContent = 'Keine';
             colorDisplay.style.color = '';
