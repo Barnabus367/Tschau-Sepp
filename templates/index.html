@@ -12,6 +12,7 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-ui.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/label-styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/card-indicator.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/multiplayer-features.css') }}">
@@ -80,6 +81,9 @@
                         </div>
                         
                         <div class="d-grid gap-2">
+                            <button class="btn btn-primary" id="add-bot-btn">
+                                <i class="fas fa-robot me-2"></i>Bot hinzufügen
+                            </button>
                             <button class="btn btn-success btn-lg" id="start-game-btn" disabled>
                                 <i class="fas fa-play me-2"></i>Spiel starten
                             </button>

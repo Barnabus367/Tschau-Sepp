@@ -1,0 +1,354 @@
+/* Modern UI Overhaul for Tschau-Sepp */
+
+:root {
+    --primary-green: #2ecc71;
+    --dark-green: #27ae60;
+    --table-green: #155724;
+    --card-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    --card-hover: 0 8px 16px rgba(0,0,0,0.4);
+    --gold: #f39c12;
+    --dark-bg: #1a1a2e;
+}
+
+/* Reset ovales Layout */
+.game-board {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    min-height: 80vh;
+    background: var(--dark-bg);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+/* Spieltisch - Rechteckig mit abgerundeten Ecken */
+.game-table {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 70%;
+    background: radial-gradient(ellipse at center, #2a5f3a 0%, var(--table-green) 100%);
+    border-radius: 120px;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 0 0 20px rgba(0,0,0,0.3);
+    border: 8px solid #8b4513;
+}
+
+/* Karten-Styling verbessern */
+.card-item {
+    width: 70px;
+    height: 100px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    background-color: white;
+    border: 2px solid #333;
+}
+
+.card-item:hover:not(.disabled) {
+    transform: translateY(-15px) scale(1.1);
+    box-shadow: var(--card-hover);
+    z-index: 100;
+}
+
+.card-item.disabled {
+    filter: brightness(0.6);
+    cursor: not-allowed;
+}
+
+/* Bessere Hand-Anordnung */
+.hand {
+    display: flex;
+    justify-content: center;
+    gap: -30px; /* Negative gap für Überlappung */
+    padding: 10px;
+    min-height: 120px;
+}
+
+.hand .card-item {
+    transition: all 0.3s ease;
+}
+
+.hand .card-item:hover {
+    margin: 0 15px;
+}
+
+/* Player areas neu positionieren */
+#player1-area {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: 80%;
+    max-width: 600px;
+}
+
+#player2-area {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: 80%;
+    max-width: 600px;
+}
+
+/* Spieler-Profile modernisieren */
+.player-profile {
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.player-avatar {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+}
+
+.player-name {
+    flex: 1;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+.card-count {
+    background: var(--gold);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+/* Middle Section - Deck & Discard */
+.middle-section {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 100px;
+    align-items: center;
+    z-index: 5;
+}
+
+.deck-area, .discard-area {
+    text-align: center;
+}
+
+.deck-label, .discard-label {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.card-stack {
+    width: 90px;
+    height: 120px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.card-stack .card-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Kartenrückseite */
+.card-back-jass {
+    background: linear-gradient(45deg, #8b0000, #ff0000);
+    background-image: url('/static/images/jass_cardback_original.svg');
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Timer schöner gestalten */
+.game-timer {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 20px;
+    font-weight: bold;
+    display: none; /* Hide if not used */
+}
+
+.turn-timer {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    min-width: 80px;
+}
+
+/* Current player indicator */
+.current-player {
+    position: relative;
+}
+
+.current-player::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(45deg, var(--gold), #f1c40f);
+    border-radius: 20px;
+    animation: pulse-glow 2s infinite;
+    z-index: -1;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* Action buttons modern */
+.game-actions {
+    position: absolute;
+    bottom: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 20;
+}
+
+.btn {
+    background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+/* Draw button special */
+#draw-card {
+    position: absolute;
+    left: -180px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Color selection modern */
+#color-selection {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background: rgba(0,0,0,0.95);
+    padding: 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+}
+
+.color-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid white;
+    margin: 10px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.color-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.color-btn[data-color="hearts"]::before {
+    background-image: url('/static/images/rosen_original.png');
+}
+
+.color-btn[data-color="diamonds"]::before {
+    background-image: url('/static/images/schellen_original.png');
+}
+
+.color-btn[data-color="clubs"]::before {
+    background-image: url('/static/images/schilten_original.png');
+}
+
+.color-btn[data-color="spades"]::before {
+    background-image: url('/static/images/eichel_original.png');
+}
+
+.color-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255,255,255,0.5);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .game-board {
+        padding: 10px;
+    }
+    
+    .card-item {
+        width: 50px;
+        height: 70px;
+    }
+    
+    .hand {
+        gap: -40px;
+    }
+    
+    .middle-section {
+        gap: 50px;
+    }
+}

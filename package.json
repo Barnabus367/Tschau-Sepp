@@ -1,0 +1,27 @@
+{
+  "name": "tschau-sepp",
+  "version": "1.0.0",
+  "description": "Schweizer Kartenspiel - Online Multiplayer",
+  "scripts": {
+    "dev": "python3 dev_server.py",
+    "start": "python3 game_server.py",
+    "build": "pip3 install -r requirements.txt",
+    "install-deps": "pip3 install -r requirements.txt",
+    "clean": "find . -type f -name '*.pyc' -delete && find . -type d -name '__pycache__' -delete",
+    "deploy": "git add -A && git commit -m 'Deploy update' && git push",
+    "test": "python3 -m pytest tests/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Barnabus367/Tschau-Sepp.git"
+  },
+  "keywords": ["game", "cards", "multiplayer", "python", "flask", "socketio"],
+  "author": "David & Claude",
+  "license": "MIT",
+  "engines": {
+    "python": ">=3.8"
+  },
+  "dependencies": {
+    "_comment": "Python dependencies are in requirements.txt"
+  }
+}

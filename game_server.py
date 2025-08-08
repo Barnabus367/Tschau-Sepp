@@ -4,11 +4,14 @@ import string
 import time
 import html
 import re
+import random
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, session
 from flask_socketio import SocketIO, emit, join_room, leave_room, rooms
 from flask_cors import CORS
 from rate_limiter import rate_limit
+from ai_player import AIPlayer
+from simple_ai_handler import trigger_ai_turn
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'tschau-sepp-secret-key-2024')
@@ -30,7 +33,7 @@ player_sessions = {}
 disconnected_players = {}  # Store disconnected players for reconnection
 
 class Player:
-    def __init__(self, sid, name, player_id=None):
+    def __init__(self, sid, name, player_id=None, is_ai=False, ai_difficulty='medium'):
         self.id = sid
         self.player_id = player_id or secrets.token_hex(8)  # Persistent ID for reconnection
         self.name = name
@@ -40,6 +43,8 @@ class Player:
         self.has_called_sepp = False
         self.disconnect_time = None
         self.turn_start_time = None
+        self.is_ai = is_ai
+        self.ai = AIPlayer(difficulty=ai_difficulty, name=name) if is_ai else None
 
 class GameRoom:
     def __init__(self, room_code, creator_sid):
@@ -307,6 +312,55 @@ def handle_join_room(data):
         
         print(f'{player_name} joined room {room_code}')
 
+@socketio.on('add_bot')
+@rate_limit('add_bot')
+def handle_add_bot(data):
+    """Add an AI bot to the room"""
+    if request.sid not in player_sessions:
+        emit('error', {'message': 'Nicht in einem Raum'})
+        return
+    
+    room_code = player_sessions[request.sid]['room_code']
+    if room_code not in game_rooms:
+        emit('error', {'message': 'Raum nicht gefunden'})
+        return
+    
+    room = game_rooms[room_code]
+    
+    # Check if room is full
+    if len(room.players) >= 2:
+        emit('error', {'message': 'Raum ist voll'})
+        return
+    
+    # Check if game already started
+    if room.status != 'waiting':
+        emit('error', {'message': 'Spiel läuft bereits'})
+        return
+    
+    # Create AI bot
+    bot_difficulty = data.get('difficulty', 'medium')
+    bot_names = ['Bot-Max', 'Bot-Anna', 'Bot-Tom', 'Bot-Lisa', 'Bot-Felix', 'Bot-Emma']
+    bot_name = random.choice(bot_names)
+    bot_id = f"bot_{room_code}_{secrets.token_hex(4)}"
+    
+    bot = Player(bot_id, bot_name, is_ai=True, ai_difficulty=bot_difficulty)
+    
+    if room.add_player(bot):
+        # Notify all players in room
+        emit('player_joined', {
+            'players': [{'id': p.id, 'name': p.name, 'is_ai': p.is_ai} for p in room.players],
+            'ready_to_start': room.is_ready_to_start()
+        }, room=room_code)
+        
+        print(f'Bot {bot_name} added to room {room_code}')
+        
+        # Auto-start if room is full
+        if len(room.players) == 2:
+            emit('bot_ready', {'message': f'{bot_name} ist bereit!'}, room=room_code)
+
+# REMOVED - Using simple_ai_handler.py instead
+# This function was broken and incomplete
+
 @socketio.on('leave_room')
 def handle_leave_room(data):
     if request.sid not in player_sessions:
@@ -356,20 +410,31 @@ def handle_start_game(data):
     
     # Initialize game state
     from game_logic import GameEngine
-    room.game_state = GameEngine(room.players)
-    room.game_state.start_game()
+    room.game = GameEngine(room.players)
+    room.game.start_game()
     room.status = 'playing'
+    room.game_state = room.game  # Keep both for compatibility
     
     # Start turn timer for first player
     start_turn_timer(room_code)
     
     # Send initial game state to all players
     for player in room.players:
-        game_view = room.game_state.get_player_view(player.id)
-        game_view['turn_time_limit'] = room.turn_duration
-        emit('game_started', game_view, room=player.id)
+        if not (hasattr(player, 'is_ai') and player.is_ai):
+            game_view = room.game_state.get_player_view(player.id)
+            game_view['turn_time_limit'] = room.turn_duration
+            emit('game_started', game_view, room=player.id)
     
     print(f'Game started in room {room_code}')
+    
+    # Check if first player is AI
+    current_player = room.game.get_current_player()
+    if current_player:
+        for p in room.players:
+            if p.id == current_player.id and hasattr(p, 'is_ai') and p.is_ai:
+                print(f"First player is AI: {p.name}")
+                trigger_ai_turn(room, room_code, socketio)
+                break
 
 def start_turn_timer(room_code):
     """Start a timer for the current player's turn"""
@@ -423,6 +488,7 @@ def start_turn_timer(room_code):
 @rate_limit('play_card')
 def handle_play_card(data):
     if request.sid not in player_sessions:
+        print(f"[DEBUG] play_card: No session for {request.sid}")
         return
     
     session = player_sessions[request.sid]
@@ -430,10 +496,13 @@ def handle_play_card(data):
     room = game_rooms.get(room_code)
     
     if not room or room.status != 'playing':
+        print(f"[DEBUG] play_card: Room not found or not playing")
         return
     
     card = data.get('card')
+    print(f"[DEBUG] Player {request.sid} plays card: {card}")
     result = room.game_state.play_card(request.sid, card)
+    print(f"[DEBUG] Play result: {result}")
     
     if result['success']:
         # Restart turn timer for next player
@@ -451,6 +520,29 @@ def handle_play_card(data):
             if room.turn_timer:
                 room.turn_timer.cancel()
             emit('game_won', {'winner': result['winner']}, room=room_code)
+        else:
+            # Check if next player is AI
+            print(f"[DEBUG] Checking if next player is AI...")
+            current_player = room.game_state.get_current_player()
+            print(f"[DEBUG] Current player after move: {current_player.name if current_player else 'None'} (ID: {current_player.id if current_player else 'None'})")
+            
+            if current_player:
+                print(f"[DEBUG] Room has {len(room.players)} players:")
+                for p in room.players:
+                    print(f"[DEBUG]   - {p.name} (ID: {p.id}, is_ai: {getattr(p, 'is_ai', False)})")
+                    
+                for p in room.players:
+                    if p.id == current_player.id:
+                        print(f"[DEBUG] Found matching player: {p.name}")
+                        if hasattr(p, 'is_ai') and p.is_ai:
+                            print(f"[DEBUG] *** TRIGGERING AI TURN for {p.name} ***")
+                            trigger_ai_turn(room, room_code, socketio)
+                            break
+                        else:
+                            print(f"[DEBUG] Player {p.name} is NOT AI")
+                            break
+                else:
+                    print(f"[DEBUG] WARNING: No matching player found for ID {current_player.id}")
     else:
         emit('move_rejected', {'reason': result.get('reason')})
 
@@ -474,9 +566,19 @@ def handle_draw_card(data):
         
         # Broadcast updated game state
         for player in room.players:
-            game_view = room.game_state.get_player_view(player.id)
-            game_view['turn_time_limit'] = room.turn_duration
-            emit('game_update', game_view, room=player.id)
+            if not (hasattr(player, 'is_ai') and player.is_ai):
+                game_view = room.game_state.get_player_view(player.id)
+                game_view['turn_time_limit'] = room.turn_duration
+                emit('game_update', game_view, room=player.id)
+        
+        # Check if next player is AI
+        current_player = room.game_state.get_current_player()
+        if current_player:
+            for p in room.players:
+                if p.id == current_player.id and hasattr(p, 'is_ai') and p.is_ai:
+                    print(f"Next player after draw is AI: {p.name}")
+                    trigger_ai_turn(room, room_code, socketio)
+                    break
     else:
         emit('move_rejected', {'reason': result.get('reason')})
 

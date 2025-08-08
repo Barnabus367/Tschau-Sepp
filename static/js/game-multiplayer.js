@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const waitingPlayerList = document.getElementById('waiting-player-list');
     const startGameBtn = document.getElementById('start-game-btn');
     const leaveRoomBtn = document.getElementById('leave-room-btn');
+    const addBotBtn = document.getElementById('add-bot-btn');
     const waitingStatus = document.getElementById('waiting-status');
     
     // UI Elements - Game
@@ -96,6 +97,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         startGameBtn.addEventListener('click', () => {
             multiplayer.startGame();
+        });
+        
+        addBotBtn.addEventListener('click', () => {
+            multiplayer.addBot('medium');
+            addBotBtn.disabled = true;
+            addBotBtn.textContent = 'Bot wird hinzugefügt...';
         });
         
         // Allow Enter key in room code input
@@ -180,12 +187,30 @@ document.addEventListener('DOMContentLoaded', function() {
         data.players.forEach((player, index) => {
             const li = document.createElement('li');
             li.className = 'list-group-item d-flex justify-content-between align-items-center';
+            let badges = '';
+            if (player.id === multiplayer.playerId) {
+                badges += '<span class="badge bg-primary">Du</span>';
+            }
+            if (player.is_ai) {
+                badges += '<span class="badge bg-warning ms-1"><i class="fas fa-robot"></i> Bot</span>';
+            }
             li.innerHTML = `
                 <span>${player.name}</span>
-                ${player.id === multiplayer.playerId ? '<span class="badge bg-primary">Du</span>' : ''}
+                <div>${badges}</div>
             `;
             waitingPlayerList.appendChild(li);
         });
+        
+        // Hide/show add bot button
+        if (addBotBtn) {
+            if (data.players.length >= 2) {
+                addBotBtn.style.display = 'none';
+            } else {
+                addBotBtn.style.display = 'block';
+                addBotBtn.disabled = false;
+                addBotBtn.innerHTML = '<i class="fas fa-robot me-2"></i>Bot hinzufügen';
+            }
+        }
         
         // Update start button and status
         if (data.ready_to_start || data.players.length === 2) {
@@ -271,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show Tschau/Sepp buttons if applicable
         if (myTurn) {
-            if (state.hand.length === 1) {
+            if (state.hand.length === 2) {
                 tschauBtn.classList.remove('d-none');
             } else {
                 tschauBtn.classList.add('d-none');
@@ -328,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const valueOffset = {
             '6': 0, '7': 1, '8': 2, '9': 3,
-            'U': 4, 'O': 5, 'K': 6, 'A': 7
+            'U': 4, 'O': 5, 'K': 6, 'A': 7, 'B': 8
         };
         
         const imageIndex = suitOffset[card.suit] + valueOffset[card.value];
@@ -340,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
             cardElement.classList.add('disabled');
         }
         
-        const cardImagePath = `../static/images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg`;
+        const cardImagePath = `/static/images/karten/Jasskarten-Deutsch-images-${imageIndex}.jpg`;
         cardElement.style.backgroundImage = `url('${cardImagePath}')`;
         cardElement.style.backgroundSize = 'cover';
         cardElement.style.backgroundPosition = 'center';

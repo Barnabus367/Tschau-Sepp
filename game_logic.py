@@ -74,6 +74,16 @@ class GameEngine:
         """Get the current player"""
         return self.players[self.current_player_index]
     
+    def get_game_state(self):
+        """Get current game state for AI"""
+        return {
+            'current_color': self.current_color,
+            'current_value': self.current_value,
+            'must_draw_cards': self.must_draw_cards,
+            'special_effect': self.special_effect_active,
+            'waiting_for_color': self.waiting_for_color_selection
+        }
+    
     def play_card(self, player_id: str, card_data: dict) -> dict:
         """Play a card from player's hand"""
         player = self.get_player_by_id(player_id)
@@ -124,10 +134,29 @@ class GameEngine:
         
         self.add_message(f"{player.name} spielt {card.value} {card.suit}")
         
+        # Check for Tschau penalty (after playing card, check if now has 1 card)
+        if len(player.hand) == 1 and not player.has_called_tschau:
+            # Penalty for not calling Tschau before playing penultimate card
+            for _ in range(2):
+                if len(self.deck) == 0:
+                    self.reshuffle_deck()
+                if len(self.deck) > 0:
+                    player.hand.append(self.deck.pop())
+            self.add_message(f"{player.name} hat vergessen TSCHAU zu rufen! +2 Strafkarten")
+        
         # Check for winner
-        if len(player.hand) == 0 and player.has_called_sepp:
-            self.winner = player.id
-            return {'success': True, 'winner': player.id}
+        if len(player.hand) == 0:
+            if player.has_called_sepp:
+                self.winner = player.id
+                return {'success': True, 'winner': player.id}
+            else:
+                # Penalty for not calling Sepp
+                for _ in range(2):
+                    if len(self.deck) == 0:
+                        self.reshuffle_deck()
+                    if len(self.deck) > 0:
+                        player.hand.append(self.deck.pop())
+                self.add_message(f"{player.name} hat vergessen SEPP zu rufen! +2 Strafkarten")
         
         # Move to next player if no color selection needed
         if not self.waiting_for_color_selection:
@@ -188,12 +217,12 @@ class GameEngine:
         return {'success': True}
     
     def call_tschau(self, player_id: str) -> dict:
-        """Call Tschau when having 1 card"""
+        """Call Tschau when having 2 cards (before playing penultimate card)"""
         player = self.get_player_by_id(player_id)
         if not player:
             return {'success': False, 'reason': 'Spieler nicht gefunden'}
         
-        if len(player.hand) == 1:
+        if len(player.hand) == 2:
             player.has_called_tschau = True
             self.add_message(f"{player.name} ruft TSCHAU!")
             return {'success': True, 'message': 'Tschau erfolgreich gerufen'}

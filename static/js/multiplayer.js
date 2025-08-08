@@ -268,6 +268,10 @@ class MultiplayerClient {
         this.socket.emit('start_game', {});
     }
     
+    addBot(difficulty = 'medium') {
+        this.socket.emit('add_bot', { difficulty: difficulty });
+    }
+    
     playCard(card) {
         this.socket.emit('play_card', { card: card });
     }
