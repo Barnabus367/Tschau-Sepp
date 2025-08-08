@@ -1,0 +1,318 @@
+/* Turn timer display */
+.turn-timer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 24px;
+    font-weight: bold;
+    z-index: 100;
+    display: none;
+    animation: pulse 1s infinite;
+}
+
+.turn-timer.active {
+    display: block;
+}
+
+.turn-timer.warning {
+    background: rgba(255, 165, 0, 0.9);
+    animation: pulse 0.5s infinite;
+}
+
+.turn-timer.critical {
+    background: rgba(255, 0, 0, 0.9);
+    animation: pulse 0.3s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.05); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Chat and emotes */
+.chat-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    max-height: 400px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.chat-header {
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-toggle {
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    max-height: 250px;
+}
+
+.chat-message {
+    margin-bottom: 8px;
+    padding: 5px 8px;
+    border-radius: 5px;
+    background: #f0f0f0;
+}
+
+.chat-message .sender {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 12px;
+}
+
+.chat-message .text {
+    margin-top: 2px;
+    font-size: 14px;
+}
+
+.chat-input-container {
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    gap: 5px;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+}
+
+.chat-send {
+    padding: 5px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.chat-send:hover {
+    background: #0056b3;
+}
+
+/* Emote selector */
+.emote-selector {
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    display: none;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+}
+
+.emote-selector.active {
+    display: grid;
+}
+
+.emote-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.emote-btn:hover {
+    transform: scale(1.2);
+}
+
+/* Floating emotes animation */
+.floating-emote {
+    position: absolute;
+    font-size: 48px;
+    animation: float-up 3s ease-out forwards;
+    pointer-events: none;
+    z-index: 999;
+}
+
+@keyframes float-up {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(0.5);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-100px) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-200px) scale(0.8);
+    }
+}
+
+/* Reconnection modal */
+.reconnect-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.reconnect-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+}
+
+.reconnect-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Game paused overlay */
+.game-paused-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 500;
+}
+
+.game-paused-message {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Rematch button */
+.rematch-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.rematch-btn {
+    padding: 10px 30px;
+    font-size: 18px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.rematch-btn:hover {
+    background: #218838;
+}
+
+.rematch-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+.rematch-status {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Sound controls */
+.sound-controls {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.sound-controls button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.sound-controls button:hover {
+    transform: scale(1.1);
+}
+
+.sound-controls input[type="range"] {
+    width: 100px;
+    vertical-align: middle;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .chat-container {
+        width: 90%;
+        right: 5%;
+        left: 5%;
+        bottom: 10px;
+    }
+    
+    .turn-timer {
+        font-size: 18px;
+        padding: 8px 16px;
+    }
+    
+    .sound-controls {
+        top: 5px;
+        right: 5px;
+        transform: scale(0.9);
+    }
+}

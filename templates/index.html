@@ -2,8 +2,11 @@
 <html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tschau Sepp Card Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Tschau Sepp - Online Multiplayer</title>
     <!-- Use the Replit-themed bootstrap CSS -->
     <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
@@ -11,6 +14,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/label-styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/card-indicator.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/multiplayer-features.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-optimized.css') }}">
 </head>
 <body>
     <div class="container-fluid py-4">
@@ -20,7 +25,79 @@
             </div>
         </header>
 
-        <div class="row justify-content-center">
+        <!-- Lobby Screen -->
+        <div id="lobby-screen" class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="text-center mb-0">Tschau Sepp Online</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="player-name" class="form-label">Dein Name:</label>
+                            <input type="text" class="form-control" id="player-name" placeholder="Spielername" value="Spieler">
+                        </div>
+                        
+                        <div class="d-grid gap-2 mb-3">
+                            <button class="btn btn-primary btn-lg" id="create-room-btn">
+                                <i class="fas fa-plus-circle me-2"></i>Neuen Raum erstellen
+                            </button>
+                        </div>
+                        
+                        <div class="text-center mb-3">
+                            <span class="text-muted">— oder —</span>
+                        </div>
+                        
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="room-code-input" placeholder="Raum-Code eingeben" maxlength="6" style="text-transform: uppercase;">
+                            <button class="btn btn-success" id="join-room-btn">
+                                <i class="fas fa-sign-in-alt me-2"></i>Beitreten
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Waiting Room -->
+        <div id="waiting-room" class="row justify-content-center d-none">
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="text-center mb-0">Warteraum</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info text-center">
+                            <h5>Raum-Code: <span id="display-room-code" class="badge bg-primary fs-3"></span></h5>
+                            <small>Teile diesen Code mit deinem Freund!</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Spieler im Raum:</h6>
+                            <ul class="list-group" id="waiting-player-list">
+                                <!-- Players will be added here dynamically -->
+                            </ul>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success btn-lg" id="start-game-btn" disabled>
+                                <i class="fas fa-play me-2"></i>Spiel starten
+                            </button>
+                            <button class="btn btn-secondary" id="leave-room-btn">
+                                <i class="fas fa-door-open me-2"></i>Raum verlassen
+                            </button>
+                        </div>
+                        
+                        <div class="mt-3 text-center text-muted" id="waiting-status">
+                            Warte auf zweiten Spieler...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="row justify-content-center d-none">
             <div class="col-md-10 col-lg-8">
                 <!-- Game timer -->
                 <div class="game-timer" id="game-timer">00:00</div>
@@ -29,6 +106,11 @@
                 <div class="game-board position-relative">
                     <!-- Game table background -->
                     <div class="game-table"></div>
+                    
+                    <!-- Turn timer -->
+                    <div class="turn-timer" id="turn-timer">
+                        <span id="turn-timer-text">60</span>
+                    </div>
                     
                     <!-- Player 2's hand (top) -->
                     <div class="player-area" id="player2-area">
@@ -127,6 +209,40 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Chat and Emotes -->
+        <div class="chat-container" id="chat-container" style="display: none;">
+            <div class="chat-header">
+                <span>Chat</span>
+                <span class="chat-toggle" id="chat-toggle">▼</span>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chat-input" placeholder="Nachricht..." maxlength="200">
+                <button class="chat-send" id="chat-send">→</button>
+            </div>
+            
+            <!-- Emote selector -->
+            <div class="emote-selector" id="emote-selector">
+                <button class="emote-btn" data-emote="👍">👍</button>
+                <button class="emote-btn" data-emote="👎">👎</button>
+                <button class="emote-btn" data-emote="😄">😄</button>
+                <button class="emote-btn" data-emote="😢">😢</button>
+                <button class="emote-btn" data-emote="😮">😮</button>
+                <button class="emote-btn" data-emote="🎉">🎉</button>
+                <button class="emote-btn" data-emote="💭">💭</button>
+                <button class="emote-btn" data-emote="🔥">🔥</button>
+                <button class="emote-btn" data-emote="❤️">❤️</button>
+                <button class="emote-btn" data-emote="😤">😤</button>
+            </div>
+        </div>
+        
+        <!-- Emote toggle button -->
+        <button class="btn btn-primary" id="emote-toggle" style="position: fixed; bottom: 20px; left: 20px; z-index: 1000; display: none;">
+            😊
+        </button>
+        
+        </div> <!-- End of game-screen -->
 
         <!-- Game rules modal -->
         <div class="modal fade" id="rulesModal" tabindex="-1" aria-labelledby="rulesModalLabel" aria-hidden="true">
@@ -170,6 +286,17 @@
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+    <!-- Socket.IO client library -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <!-- Multiplayer client -->
+    <script src="{{ url_for('static', filename='js/multiplayer.js') }}"></script>
+    <!-- Touch handler for mobile -->
+    <script src="{{ url_for('static', filename='js/touch-handler.js') }}"></script>
+    <!-- Error recovery system -->
+    <script src="{{ url_for('static', filename='js/error-recovery.js') }}"></script>
+    <!-- Sound manager -->
+    <script src="{{ url_for('static', filename='js/sound-manager.js') }}"></script>
+    <!-- Main game logic with multiplayer integration -->
+    <script src="{{ url_for('static', filename='js/game-multiplayer.js') }}"></script>
 </body>
 </html>
